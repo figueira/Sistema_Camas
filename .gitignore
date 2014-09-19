@@ -1,0 +1,24 @@
+# Archivos de configuracion #
+#############################
+AM/settings.py
+
+# Compiled source #
+###################
+*.pyc
+
+# Logs and databases #
+######################
+.sqlite*
+
+# Archivos de los editores de texto #
+#####################################
+*~
+*.swp*
+
+# Archivos generados en compilacion de LaTeX #
+##############################################
+*.toc
+*.aux
+*.log
+*.out
+*.db

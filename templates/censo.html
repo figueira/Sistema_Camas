@@ -1,0 +1,145 @@
+{% extends "base.html" %}
+
+{% block styles %}
+<!-- DataTables CSS -->
+<link rel="stylesheet" type="text/css" href="{{ STATIC_URL }}libs/jquery/themes/dataTables/jquery.dataTables.css">
+{% endblock %}
+
+{% block scripts %}
+<!-- DataTables -->
+<script type="text/javascript" charset="utf8" src="{{ STATIC_URL }}libs/jquery/js/jquery.dataTables.js"></script>
+<script type="text/javascript" charset="utf8" src="{{ STATIC_URL }}libs/jquery/js/jquery.dataTables.columnFilter.js"></script>
+
+<script> 
+   $(document).ready(function() {
+    $('#tabla_censo').dataTable( {
+        "paging":   false,
+        "scrollY":  300,
+        "info":     false,
+        "autoWidth": false
+       
+    } ).columnFilter({
+            aoColumns: [ 
+                { type: "text" },
+                { type: "text" },
+                { type: "text" },
+                { type: "text" },
+                { type: "text" },
+                { type: "text" },
+                { type: "select" },
+                null
+            ]
+
+        });
+  } );
+    
+</script>
+
+<script>
+    $(function() {
+        var elements = document.getElementsByClassName("coloreable");
+        var coloreable;
+        for (var i = 0; i < elements.length; i++) {
+            coloreable = elements[i];
+            num = coloreable.innerHTML;
+            if ( 0<= num && num <= 2) {
+                coloreable.className += " verde";
+            } else if (num <= 4) {
+                coloreable.className += " amarillo";
+            } else if (num >= 5) {
+                coloreable.className += " rojo";
+            }
+        }
+    });
+    
+    $(function() {
+        var elements = document.getElementsByClassName("hidden-coloreable");
+        var coloreable;
+        for (var i = 0; i < elements.length; i++) {
+            coloreable = elements[i];
+            bool = coloreable.innerHTML;
+            if (bool == 1) {
+                var alt = $(elements[i]).attr("alt");
+                $('.' + alt).addClass("amarillo_claro");
+            }
+        }
+    });
+    
+    function dar_alta( item ) {
+        if (confirm("Realmente desea dar de alta a este paciente?")) {
+            $( item ).find('img').attr("src", "/static/img/alta_dis.png");
+        //     $( item ).innerHTML = "En proceso";
+            var $objeto = $( item ).parent();
+            var alt = $objeto.attr("alt");
+            $('.' + alt).removeClass("amarillo_claro");
+            $('.' + alt).addClass("azul_claro");
+        }
+    }  
+  </script>
+{% endblock %}
+
+{% block body %}
+<div class="row">
+    <div class="cuadroGrande centrar">
+      <h4>
+        <center><u>Censo</u></center>
+      </h4>  
+      <h5><center> {{ hoy }} </center></h5>
+      {% if ingresos %}
+        <table id="tabla_censo">
+            <thead>
+                <tr>
+                    <th>N&uacute;mero de Habitaci&oacute;n</th>
+                    <th>Paciente</th>
+                    <th>M&eacute;dico</th>
+                    <th>Fecha estimada de salida</th>
+                    <th>Nro. D&iacute;as en la habitaci&oacute;n</th>
+                    <th>Nro. D&iacute;as en la instituci&oacute;n</th>
+                    <th>Procedencia</th>
+                    <th>Dar alta</th>
+                </tr>
+            </thead>
+                       
+            <tbody>
+                {% for ingreso in ingresos %}
+                <div alt="{{ ingreso.id }}" class="hidden-coloreable" style="display: none;">
+                    {{ ingreso.es_hoy }}
+                </div>
+                <tr>
+                  <td class="{{ ingreso.id }}">
+                      {{ ingreso.habitacion.numero }}
+                  </td>
+                  <td class="{{ ingreso.id }}">
+                      {{ ingreso.solicitud.paciente }}
+                  </td>
+                  <td class="{{ ingreso.id }}">
+                      Dr. {{ ingreso.solicitud.medico }}
+                  </td>
+                  <td class="{{ ingreso.id }}">
+                      {{ ingreso.solicitud.salida }}
+                  </td>
+                  <td class="coloreable" style="font-size: 25px; color: white">
+                      {{ ingreso.num_dias }}
+                  </td>
+                  <td class="coloreable" style="font-size: 25px; color: white">
+                      {{ ingreso.solicitud.paciente.ingreso }}
+                  </td>
+                  <td class="{{ ingreso.id }}">
+                       {{ ingreso.procedencia }}
+                  </td>
+                  <td alt="{{ ingreso.id }}" class="{{ ingreso.id }}">
+                      <a onclick="dar_alta(this);" href="#"><img class="marginleft5 width40" src="/static/img/alta_en.png" /></a>
+                  </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+      </table>
+      {% else %}
+      <h4>No hay pacientes en este momento.</h4>
+      {% endif %}
+    </div>
+  </div>
+
+{% endblock %}
+        
+       

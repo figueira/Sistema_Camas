@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block styles %}
+{% endblock %}
+
+{% block body %}
+  
+   <table  style="text-align:left">
+	<tr>
+		<td width="10%">
+			<h4 style="color:grey">
+				Vista matriz
+			</h4>
+		</td>
+		
+		<td width="4%">
+			<h4>|</h4>
+		</td>
+		
+		<td width="50%" >
+			<h4>
+			<a href="/estadisticas/termometro/">
+				Vista term&oacute;metro
+			</a>
+			</h4>
+		</td>
+	</tr>
+  </table>
+  
+	<div class="row">
+		<div class="titulo">
+			Matriz
+		</div>
+		<br>
+		<h4><center> Al d&iacute;a {{ hoy }} </center></h4>
+		<br>
+	</div>
+	<br>
+	<div class="row">
+		<div class="cuadroGrande centrar span10 offset1">
+			<table class="table table-bordered">
+			{% for hab in habs %}
+				{% cycle '<tr>' '' '' '' '' '' '' '' '' '' '' '' '' '' '' %}
+					<td class="{{ hab.estado }}">{{ hab.numero }}</td>
+				{% cycle '' '' '' '' '' '' '' '' '' '' '' '' '' '' '</tr>' %}
+			{% endfor %}
+			</table>
+			<table>
+				<tr>
+				<h5>Leyenda:</h5>
+				<td width="5%" style="background:#00000;border: 1px solid black;"> </td>
+				<td> Disponible. </td>
+				<td width="5%"> </td>
+				<td width="5%" style="background:#99FFFF;border: 1px solid black;"> </td>
+				<td> En proceso de alta. </td>
+				<td width="5%"> </td>
+				<td width="5%" style="background:#00CC33;border: 1px solid black;">  </td>
+				<td> En proceso de limpieza. </td>
+				<td width="5%"> </td>
+				<td width="5%" style="background:#FFFF99;border: 1px solid black;">  </td>
+				<td> Ocupada. </td>
+				<td width="5%"> </td>
+				<td  width="5%" style="background:#FF0000;border: 1px solid black;">  </td>
+				<td> En mantenimiento. </td>				
+				</tr>
+			</table>
+		</div>
+	</div>
+
+{% endblock %}

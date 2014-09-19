@@ -1,0 +1,588 @@
+[
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 1,
+    "fields": {
+      "numero": "200",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 2,
+    "fields": {
+      "numero": "201",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 3,
+    "fields": {
+      "numero": "202",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 4,
+    "fields": {
+      "numero": "203",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 5,
+    "fields": {
+      "numero": "204",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 6,
+    "fields": {
+      "numero": "205",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 7,
+    "fields": {
+      "numero": "206",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 8,
+    "fields": {
+      "numero": "207",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 9,
+    "fields": {
+      "numero": "208",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 10,
+    "fields": {
+      "numero": "209",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 11,
+    "fields": {
+      "numero": "210",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 12,
+    "fields": {
+      "numero": "211",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 13,
+    "fields": {
+      "numero": "212",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 14,
+    "fields": {
+      "numero": "213",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 15,
+    "fields": {
+      "numero": "214",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 16,
+    "fields": {
+      "numero": "215",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 17,
+    "fields": {
+      "numero": "216",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 18,
+    "fields": {
+      "numero": "217",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 19,
+    "fields": {
+      "numero": "218",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 20,
+    "fields": {
+      "numero": "219",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 21,
+    "fields": {
+      "numero": "220",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 22,
+    "fields": {
+      "numero": "221",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 23,
+    "fields": {
+      "numero": "222",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 24,
+    "fields": {
+      "numero": "223",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 25,
+    "fields": {
+      "numero": "224",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 26,
+    "fields": {
+      "numero": "225",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 27,
+    "fields": {
+      "numero": "226",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 28,
+    "fields": {
+      "numero": "227",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 29,
+    "fields": {
+      "numero": "228",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 30,
+    "fields": {
+      "numero": "229",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 31,
+    "fields": {
+      "numero": "230",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 32,
+    "fields": {
+      "numero": "231",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 33,
+    "fields": {
+      "numero": "232",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 34,
+    "fields": {
+      "numero": "233",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 35,
+    "fields": {
+      "numero": "234",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 36,
+    "fields": {
+      "numero": "235",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 37,
+    "fields": {
+      "numero": "236",
+      "tipo": "H"
+    }
+  },
+  {
+    "model": "app_camas.Habitacion",
+    "pk": 38,
+    "fields": {
+      "numero": "237",
+      "tipo": "H"
+    }
+  },
+  {
+        "model": "app_camas.Habitacion",
+        "pk": 39,
+        "fields": {
+        "numero": "300",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 40,
+        "fields": {
+        "numero": "301",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 41,
+        "fields": {
+        "numero": "302",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 42,
+        "fields": {
+        "numero": "303",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 43,
+        "fields": {
+        "numero": "304",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 44,
+        "fields": {
+        "numero": "305",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 45,
+        "fields": {
+        "numero": "306",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 46,
+        "fields": {
+        "numero": "307",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 47,
+        "fields": {
+        "numero": "308",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 48,
+        "fields": {
+        "numero": "309",
+        "tipo": "H"
+    }
+  },
+  {
+        "model": "app_camas.Habitacion",
+        "pk": 49,
+        "fields": {
+        "numero": "310",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 50,
+        "fields": {
+        "numero": "311",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 51,
+        "fields": {
+        "numero": "312A",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 72,
+        "fields": {
+        "numero": "312B",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 52,
+        "fields": {
+        "numero": "313",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 53,
+        "fields": {
+        "numero": "314A",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 73,
+        "fields": {
+        "numero": "314B",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 54,
+        "fields": {
+        "numero": "315",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 55,
+        "fields": {
+        "numero": "316",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 56,
+        "fields": {
+        "numero": "317",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 57,
+        "fields": {
+        "numero": "318",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 58,
+        "fields": {
+        "numero": "319",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 59,
+        "fields": {
+        "numero": "320",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 60,
+        "fields": {
+        "numero": "321",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 61,
+        "fields": {
+        "numero": "322",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 62,
+        "fields": {
+        "numero": "323",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 63,
+        "fields": {
+        "numero": "324",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 64,
+        "fields": {
+        "numero": "325",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 65,
+        "fields": {
+        "numero": "326",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 66,
+        "fields": {
+        "numero": "327",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 67,
+        "fields": {
+        "numero": "328",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 68,
+        "fields": {
+        "numero": "329",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 69,
+        "fields": {
+        "numero": "330",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 70,
+        "fields": {
+        "numero": "331",
+        "tipo": "H"
+    }
+  },
+{
+        "model": "app_camas.Habitacion",
+        "pk": 71,
+        "fields": {
+        "numero": "332",
+        "tipo": "H"
+    }
+  }
+
+
+]

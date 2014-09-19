@@ -1,0 +1,102 @@
+******************************************************************************
+*                                                                            *
+* Este es el API desarrollado en conjuto con Carlos Ledezma que servirá para *
+* conectar los sistemas desarrollados en paralelo que apoyan la gestión de   *
+* las habitaciones en el Centro Médico de Caracas. Estos sistemas son: el    *
+* Sistema de Gestión de Camas (SGC) y el Sistema de Altas (SA).              *
+*                                                                            *
+* A continuación se presentan un grupo de funciones que deberá desarrollar   *
+* el equipo encargado del sistema para que sirva como Web Service.           *
+*                                                                            *
+* Última modificación: 23/07/2014                                            *
+*                                                                            *
+******************************************************************************
+
+Consideraciones:
+***************
+
+-Es importante comunicarse con el cliente para las especificaciones
+necesarias a la hora de programar este grupo de funciones.
+
+-El host y los puertos de comunicación son tomados como constantes y deben
+ser determinados junto a Carlos Ledezma.
+
+-Mantener el mismo nombre y tipo de los atributos para los objetos jason
+para lograr una comunicación efectiva.
+
+
+Funciones disparadas localmente (SGC -> SA):
+*******************************************
+
+- Agregar alta
+  ============
+Se agrega un alta al SA cuando el médico presiona la opción de "Dar Alta" a un
+paciente desde la vista del censo en SGC. Este alta es reversible hasta justo 
+antes del pase de salida de la habitación (una vez se da este pase, el alta
+no puede ser revertida en caso de un error cometido por el médico u otra
+circunstancia).
+
+
+Método:  post
+URL:     ~/altas/agregar
+
+Atributos para el objeto jason:
+
+1) id_cama: numérico único que identifica el objeto cama en la base de datos.
+2) nombre_cama: string con el nombre de la habitación (número. p.e. 302, 200)
+3) nombre_paciente: string con todo el nombre del paciente (solo para muestra)
+4) fecha_alta [opcional]: datetime con la fecha en que se dio el alta (en caso
+                          de que el alta se haya efectuado antes pero no se
+                          haya presionado el botón a tiempo)
+
+Return:
+
+1) codigo_retorno: int (1: OK / 0: error / Error HTTP: Servidor caído).
+
+
+
+Funciones disparadas remotamente (SA -> SGC):
+********************************************
+
+- Revertir Alta
+  =============
+Desde el SA se revierte un alta y la cama debe ser ocupada nuevamente por el
+paciente en el SGC. Esto ocurre en caso de que el médico cometa un error al 
+dar el alta o alguna otra circunstancia.
+
+
+Método:  post
+URL:     ~/camas/revertir_alta
+
+Atributos para el objeto jason:
+
+1) id_cama: numérico único que identifica el objeto cama en la base de datos.
+
+Return:
+
+1) codigo_retorno: int (1: OK / 0: error / Error HTTP: Servidor caído).
+
+
+- Liberar Cama
+  ============
+El proceso del alta se termina en el SA y la cama se considera disponible en
+el SGC.
+
+
+Método:  post
+URL:     ~/camas/liberar_cama
+
+Atributos para el objeto jason:
+
+1) id_cama: numérico único que identifica el objeto cama en la base de datos.
+
+Return:
+
+1) codigo_retorno: int (1: OK / 0: error / Error HTTP: Servidor caído).
+
+
+
+******************************************************************************
+En caso de dudas contactar a: 
+Carlos Ledezma cgledezma1101@gmail.com 
+Cristians González cagcmd@gmail.com

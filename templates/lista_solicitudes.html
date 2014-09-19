@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+  <script>
+    // Funcion para eliminar solicitud
+    function cancelar_sol( item ) {
+	  var $objeto = $( item ).parent().parent();
+      var id = $objeto.find('input[name=id]').val();
+        $.ajax({
+          url : 'cancelar_solicitud',
+          type : 'POST',
+          dataType: "json",
+          data : {id:id},
+          success : function(json) {
+            if (json.result == 'success') {
+              alert("Solicitud eliminada con exito.");
+            } else {
+              alert("Error: No se pudo eliminar la solicitud.");
+            }
+          },
+          error : function(xhr,errmsg,err) {
+            alert("Error: No se pudo eliminar la solicitud.");
+          }
+		});
+    }
+  </script>
+{% endblock %}  
+
+{% block body %}
+
+  <div class="row">
+    <div class="cuadroGrande span12 centrar">
+	  {% if solicitudes_activas %}
+      <div class="titulo">
+        Solicitudes Activas
+      </div>
+      <br/>
+      <p>Se muestran las solicitudes pendientes por aprobaci&oacute;n hasta el momento</p>
+  <table class="table table-bordered">
+    <tr>
+        <th>Nombre del paciente</th>
+        <th>Fecha de solicitud</th>
+	    <th>Inicio de Ocupaci&oacute;n</th>
+        <th>Fin de Ocupaci&oacute;n</th>
+        <th>Procedencia</th>
+		<td></td>
+    </tr>
+		{% for activa in solicitudes_activas %}
+		{% if activa.paciente %}
+		<tr class="lista_solicitud">
+			<input type="hidden" name="id" value="{{ activa.id }}" />
+			<td style="font-size:150%;">
+				{{activa.paciente}}
+			</td>
+			<td style="font-size:150%;">
+				{{activa.fecha_solicitud|date:"d-m-Y"}}
+			</td>
+			<td style="font-size:150%;">
+				{{activa.fecha_ingreso|date:"d-m-Y"}}
+			</td>
+			<td style="font-size:150%;">
+				{{activa.fecha_salida|date:"d-m-Y"}}
+			</td>
+			<td style="font-size:150%;">
+				{{activa.procedenciatex}}
+			</td>
+			<td>
+				<a onclick="cancelar_sol(this);" href="#"><img src="/static/img/delete_en.png" /></a>
+			</td>
+		</tr>
+		{% endif %}
+		{% endfor %}
+      </table>
+	  {% else %}
+      <h4>No hay solicitudes pendientes en este momento.</h4>
+	  {% endif %}
+    </div>
+	
+{% endblock %}

@@ -1,0 +1,467 @@
+{% extends "base.html" %}
+
+{% block styles %}  
+  <link rel="stylesheet"
+    href="/static/libs/datepicker/css/bootstrap-datetimepicker.min.css">
+  <link rel="stylesheet"
+    href="/static/css/tipsy.css">
+{% endblock %}
+
+{% block scripts %}
+  <script src="{{ STATIC_URL }}selectable/js/jquery.dj.selectable.js"></script>
+  <!--Datetime Picker -->
+  <script type="text/javascript"
+    src="{{ STATIC_URL }}libs/datepicker/js/bootstrap-datetimepicker.min.js"></script>
+  <script type="text/javascript"
+    src="{{ STATIC_URL }}libs/jquery/js/jquery.tipsy.js"></script>
+  <script type="text/javascript"
+    src="{{ STATIC_URL }}libs/spin/js/spin.js"></script>
+  <script type="text/javascript"
+    src="{{ STATIC_URL }}libs/spin/js/spin.min.js"></script>
+  
+  <script>
+    $(document).ready(function() {
+        $("#buscador").click( buscar_paciente);
+        $('#buscador').tipsy({gravity: 'w'});
+        $('#cedula').submit( buscar_paciente );
+
+        $( "#id_fecha_nacimiento, #id_fecha_ingreso, #id_fecha_salida" )
+            .datepicker({ dateFormat: "dd/mm/yy" });
+    });
+    
+    function buscar_paciente () {
+        $('#form-oculto').hide();
+        var target = document.getElementById('spiner');
+        var spinner = new Spinner().spin();
+        target.appendChild(spinner.el);
+        
+        var objeto = $('#cedula');
+        $.ajax({
+            url : $(objeto).attr("action"),
+            type : $(objeto).attr("method"),
+            dataType: "json",
+            data : $(objeto).serialize(),
+            success : function(json) {
+                spinner.stop();
+                if (json.result == 'success') {
+                    var arr_from_json = JSON.parse(json.message);
+                    mostrar_paciente(arr_from_json[0].fields);
+                } else {
+                    alert("No hay nadie con esa cedula");
+                }
+            },
+            error : function(xhr,errmsg,err) {
+                spinner.stop();
+                alert("error");
+            }
+        });        
+        return false;
+    }
+    
+    function mostrar_form () {
+        $('#form-oculto').fadeIn();
+    }
+    
+    function mostrar_paciente( paciente ) {
+        $('#muestra_paciente').show('slide');
+        $('#cedula_paciente').text(paciente.cedula);
+        $('#nombres_paciente').text(paciente.nombres);
+        $('#apellidos_paciente').text(paciente.apellidos);
+        $('#edad_paciente').text(paciente.edad);
+        if (paciente.sexo == 'M') {
+            $('#sexo_paciente').text("Masculino");
+        } else {
+            $('#sexo_paciente').text("Femenino");
+        }
+        $('#contacto_paciente').text(paciente.contacto_tlf);
+        $('#form-completo').fadeIn();
+        $('#form-completo').find('input[name=cedula]').val(paciente.cedula);
+    }
+  </script>
+{% endblock %} 
+
+{% block body %}
+  {% if mensaje %}
+    {{ mensaje }}
+  {% endif %}
+  <div class="row cuadroGrande span12">
+  
+    <table class="cuadroGrande span12">
+      <tr>
+	    <td width="80%">
+	      <h4>Solicitar habitaci&oacute;n</h4>
+	    </td>
+	    <td>
+	      <a href="listar_solicitudes" class="fontsize16">
+	        Lista de Solicitudes Activas
+	      <a>
+	      </br>
+	    </td>
+      <tr>
+    </table>
+
+    
+    <div class="cuadroGrande span5">
+        <form id="cedula" class= "tablaAgregar" method="post" action="/buscar/paciente">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>C&eacute;dula del paciente&nbsp&nbsp&nbsp</td>
+                    <td>{{form.cedula}}</td>
+                    <td>
+                        <a href="#">
+                            <img id="buscador" 
+                                title='Buscar paciente con esta c&eacute;dula' 
+                                style="margin-left: 12px;" 
+                                src="/static/img/lupa.png"/>
+                        </a>
+                    </td>
+                    <td><span id="spiner"></span><td>
+                    <td><span class="msj-error"> {{form.cedula.errors}} </span></td>
+                </tr>
+            </table>
+            <a href="#" onClick="mostrar_form();">+ Solicitar habitaci&oacute;n para un paciente no registrado</a>
+        </form>
+        
+        
+        <form id="form-completo" class= "tablaAgregar" method="post" action="/habitacion/solicitar" style="display: none">
+            <h5>
+                Formulario de Solicitud de Habitaci&oacute;n
+            </h5>
+            </br>
+            {% csrf_token %}
+            <table>
+                
+                {{form.cedula.as_hidden}}
+            
+                <tr>
+                    <td>C&oacute;digo del M&eacute;dico tratante</td>
+                    <td>{{form.codigo_doctor}}</td>
+                    <td>
+                    <span class="msj-error"> 
+                        {{form.codigo_doctor.errors}}
+                    </span>
+                    </td>
+                </tr>
+
+                <tr>
+                <td>Diagn&oacute;stico</td>
+                    <td>{{form.diagnostico}}</td>
+                    <td>
+                    <span class="msj-error"> 
+                        {{form.diagnostico.errors}}
+                    </span>
+                    </td>
+                </tr>
+                
+                {% for e in form %}
+                <tr>
+                    {% if e.label == "FECHA ESTIMADA DE INGRESO" %}
+                    <td>Fecha estimada de ingreso&nbsp&nbsp</td>
+                    <td>
+                    <div id="ingreso_picker" 
+                            class="input-append">
+                        {{e}}
+                        <span  class="add-on">
+                            <i data-time-icon="icon-time"
+                                data-date-icon="icon-calendar"> 
+                            </i>
+                        </span>
+
+                    </td>
+                    <td>
+                        {{e.errors}}
+                        &nbsp &nbsp{{ mnj_fecha }}
+                    </td> 
+                        
+                    {% elif e.label == "FECHA ESTIMADA DE SALIDA" %}
+                
+                    <td>Fecha estimada de salida&nbsp&nbsp</td>
+                    <td>
+                    <div id="ingreso_picker" 
+                            class="input-append">
+                        {{e}}
+                        <span  class="add-on">
+                            <i data-time-icon="icon-time"
+                                data-date-icon="icon-calendar"> 
+                            </i>
+                        </span>
+
+                    </td>
+                    <td>
+                        {{e.errors}}
+                        &nbsp &nbsp{{ mnj_fecha }}
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+                
+                <tr>
+                    <td>Procedencia</td>
+                    <td>{{form.procedencia}}</td>
+                    <td>
+                    <span class="msj-error">
+                        {{form.procedencia.errors}} 
+                    </span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Correo solicitante</td>
+                    <td> 
+                        {{form.correo_solicitante}}
+                    </td>
+                    <td>
+                    <span class="msj-error"> 
+                        {{form.correo_solicitante.errors}}
+                    </span>
+                    </td>
+                </tr> 
+                
+                <tr>
+                    <td>Observaciones</td>
+                    <td> 
+                        {{form.observacion}}
+                    </td>
+                    <td>
+                    <span class="msj-error"> 
+                        {{form.observacion.errors}}
+                    </span>
+                    </td>
+                </tr>   
+                
+                <tr>
+                    <td></td>
+                    <td>
+                    </br>
+                    <input class="btn btn-primary" 
+                            type="submit" 
+                            value="Solicitar Habitaci&oacute;n" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+
+        
+        
+        <br>
+        <form id="form-oculto" class="tablaAgregar" method="post" action="/habitacion/paciente_nuevo" style="display: none">
+            {% csrf_token %}
+            <table>
+                <tr>
+                    <td>N&uacute;mero de historia del paciente</td>
+                    <td>{{form2.num_historia}}</td>
+                    <td>
+                        <span class="msj-error"> {{form2.num_historia.errors}} </span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>C&eacute;dula del paciente</td>
+                    <td>{{form2.cedula}}</td>
+                    <td>{{form2.tipo_cedula}}</td>
+                    <td>
+                        <span class="msj-error"> 
+                            {{form2.tipo_cedula.errors}} 
+                            {{form2.cedula.errors}} 
+                        </span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Nombres del paciente</td>
+                    <td>{{form2.nombres}}</td>
+                    <td>
+                        <span class="msj-error"> {{form2.cedula.errors}} </span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Apellidos del paciente</td>
+                    <td>{{form2.apellidos}}</td>
+                    <td>
+                        <span class="msj-error"> {{form2.cedula.errors}} </span>
+                    </td>
+                </tr>
+                
+                <tr>
+                    <td>Sexo del paciente</td>
+                    <td>{{form2.sexo}}</td>
+                    <td>
+                        <span class="msj-error"> {{form2.sexo.errors}} </span>
+                    </td>
+                </tr>
+                
+                {% for e in form2 %}
+                <tr>
+                    {% if e.label == "FECHA DE NACIMIENTO" %}
+                    <td>Fecha de nacimiento del paciente&nbsp&nbsp</td>
+                    <td>
+                    <div id="ingreso_picker" 
+                            class="input-append">
+                        {{e}}
+                        <span  class="add-on">
+                            <i data-time-icon="icon-time"
+                                data-date-icon="icon-calendar"> 
+                            </i>
+                        </span>
+    
+                    </td>
+                    <td>
+                        {{e.errors}}
+                        &nbsp &nbsp{{ mnj_fecha }}
+                    </td> 
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            
+                <tr>
+                    <td>C&oacute;digo del M&eacute;dico tratante</td>
+                    <td>{{form2.codigo_doctor}}</td>
+                    <td>
+                    <span class="msj-error"> 
+                        {{form2.codigo_doctor.errors}}
+                    </span>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Diagn&oacute;stico</td>
+                    <td>{{form2.diagnostico}}</td>
+                    <td>
+                        <span class="msj-error"> 
+                            {{form2.diagnostico.errors}}
+                        </span>
+                    </td>
+                </tr>
+            
+                {% for e in form2 %}
+                <tr>
+                    {% if e.label == "FECHA ESTIMADA DE INGRESO" %}
+                    <td>Fecha estimada de ingreso&nbsp&nbsp</td>
+                    <td>
+                    <div id="ingreso_picker" 
+                            class="input-append">
+                        {{e}}
+                        <span  class="add-on">
+                            <i data-time-icon="icon-time"
+                                data-date-icon="icon-calendar"> 
+                            </i>
+                        </span>
+    
+                    </td>
+                    <td>
+                        {{e.errors}}
+                        &nbsp &nbsp{{ mnj_fecha }}
+                    </td> 
+                    
+                    {% elif e.label == "FECHA ESTIMADA DE SALIDA" %}
+            
+                    <td>Fecha estimada de salida&nbsp&nbsp</td>
+                    <td>
+                    <div id="ingreso_picker" 
+                            class="input-append">
+                        {{e}}
+                        <span  class="add-on">
+                            <i data-time-icon="icon-time"
+                                data-date-icon="icon-calendar"> 
+                            </i>
+                        </span>
+    
+                    </td>
+                    <td>
+                        {{e.errors}}
+                        &nbsp &nbsp{{ mnj_fecha }}
+                    </td> 
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            
+                <tr>
+                    <td>Procedencia</td>
+                    <td>{{form2.procedencia}}</td>
+                    <td>
+                        <span class="msj-error">
+                            {{form2.procedencia.errors}} 
+                        </span>
+                    </td>
+                </tr>
+            
+                <tr>
+                    <td>Correo solicitante</td>
+                    <td> 
+                        {{form2.correo_solicitante}}
+                    </td>
+                    <td>
+                        <span class="msj-error"> 
+                            {{form2.correo_solicitante.errors}}
+                        </span>
+                    </td>
+                </tr> 
+                
+                <tr>
+                    <td>Observaciones</td>
+                    <td> 
+                        {{form2.observacion}}
+                    </td>
+                    <td>
+                        <span class="msj-error"> 
+                            {{form2.observacion.errors}}
+                        </span>
+                    </td>
+                </tr>   
+                
+                <tr>
+                    <td>
+                    </br>
+                        <input class="btn btn-primary" 
+                                type="submit" 
+                                value="Solicitar Habitaci&oacute;n" />
+                    </td>
+                </tr>
+            </table>
+        </form>
+    
+    </div>
+    
+        
+    <div id="muestra_paciente" class="hc-preview span6" style="display: none;">
+        <div class="hc-details hc-details-open-top" style="width: 100%; background-color: rgb(252, 250, 250); display: block;">
+            <table width="100%" border=0>
+                <td>
+                    <img class="hc-pic" src="/static/img/person.gif">
+                </td>
+                <td>
+                    <table class="hc-table">
+                        <tr>
+                            <td><b>C&eacute;dula:</b></td>
+                            <td id="cedula_paciente"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Nombres:</b></td>
+                            <td id="nombres_paciente"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Apellidos:</b></td>
+                            <td id="apellidos_paciente"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Sexo:</b></td>
+                            <td id="sexo_paciente"></td>
+                        </tr>
+                        <tr>
+                            <td><b>Fecha de Ingreso a la institucion:</b></td>
+                            <td>Hoy</td>
+                        </tr>
+                        <tr>
+                            <td><b>Contacto:</b></td>
+                            <td id="contacto_paciente"></td>
+                        </tr>
+                    </table>
+                </td>
+            </table>
+        </div>
+    </div>
+    
+  </div>
+{% endblock %}

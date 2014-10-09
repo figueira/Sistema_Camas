@@ -1,113 +1,170 @@
 {% extends "base.html" %}
 
 {% block body %}
-  {% if mensaje %}
-    {{ mensaje }}
-  {% endif %}
-  <div class="row">
-    <div class="cuadroGrande span12 centrar">
-      <h4>
-        Crear Nuevo Usuario
-      </h4>
-      <form class= "tablaAgregar" method="post" action="/usuario/crear">
-        {% csrf_token %}
-        <table>
-          <tr>
-            <td>C&eacute;dula</td>
-            <td>{{form.cedula}}</td>
-            <td><span class="msj-error"> {{form.cedula.errors}} </span></td>
-          </tr>
-          <tr>
-          <td>Nombres</td>
-            <td>{{form.nombres}}</td>
-            <td>
-              <span class="msj-error"> 
-                {{form.nombres.errors}}
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <td>Apellidos</td>
-            <td>{{form.apellidos}}</td>
-            <td>
-              <span class="msj-error"> 
-                {{form.apellidos.errors}}
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <td>Tipo</td>
-            <td>{{form.tipo}}</td>
-            <td>
-              <span class="msj-error"> 
-                {{form.tipo.errors}} 
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <td>Email</td>
-            <td>{{form.email}}</td>
-            <td>
-              <span class="msj-error"> 
-                {{form.email.errors}} 
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <td>Confirmaci&oacute;n de Email</td>
-            <td>{{form.email0}}</td>
-            <td>
-              <span class="msj-error"> 
-                {{form.email0.errors}} 
-              </span>
-            </td>
-          </tr>
 
-          <tr>
-            <td>Clave</td>
-            <td>{{form.clave}}</td>
-            <td>
-              <span class="msj-error"> 
-                {{form.clave.errors}} 
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <td>Confirmar Clave</td>
-            <td>{{form.clave0}}</td>
-            <td>
-              <span class="msj-error"> 
-                {{form.clave0.errors}} 
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <td></td>
-            <td>{{form.administrador}} Agregar usuario como Administrador
-            </td>
-            <td>
-              <span class="msj-error">
-                {{form.administrador.errors}} 
-              </span>
-            </td>
-          </tr>
-          
-          <tr>
-            <td></td>
-            <td>
-              <input class="btn btn-primary" 
-                     type="submit" 
-                     value="Crear Usuario" />
-            </td>
-          </tr>
-        </table>
-      </form>
-    </div>
-  </div>
+	{% if mensaje %}
+		{{ mensaje }}
+	{% endif %}
+
+	<form class= "tablaAgregar" method="post" action="/usuario/crear">
+		
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container">
+					<h4 class="text-center">
+						Crear Nuevo Usuario
+					</h4>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row">
+		
+			{% csrf_token %}
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+					
+					<br>
+
+					<span class="msj-error">
+						{{form.cedula.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-credit-card"></span>
+						</span>
+						{{form.cedula}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.nombres.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-user"></span>
+						</span>
+						{{form.nombres}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.email.errors}} 
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{form.email}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.clave.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-certificate"></span>
+						</span>
+						{{form.clave}}
+					</div>
+					
+					<br>
+
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+					
+					<br>
+
+					<span class="msj-error">
+						{{form.tipo.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-tower"></span>
+						</span>
+						{{form.tipo}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.apellidos.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-user"></span>
+						</span>
+						{{form.apellidos}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.email0.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{form.email0}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.clave0.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-certificate"></span>
+						</span>
+						{{form.clave0}}
+					</div>
+
+					<br>
+
+				</div>
+			</div>
+		
+		</div>
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container clearfix">
+
+					<div class="checkbox  pull-left">
+						<div>
+							<span class="msj-error">
+								{{form.administrador.errors}}
+							</span>
+						</div>
+						<div>
+							<label>
+								{{form.administrador}} Agregar usuario como Administrador
+							</label>
+						</div>
+					</div>
+
+					<div class="pull-right">
+						<input class="btn btn-default form-button" type="submit" value="Crear Usuario" />
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</form>			
+
 {% endblock %}
+

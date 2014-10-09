@@ -1,24 +1,213 @@
+
 body {
-  font-size: 12px;
   margin: 20px;
-  font-family: 'Raleway', sans-serif;
+  margin-top: 25px;
+  font-family: "Raleway", "Helvetica Neue", Helvetica, Arial, sans-serif;
   padding-top: 70px;
+  color: #000;
 }
 
-.footer {
-  text-align: center;
-  padding: 30px 0;
-  margin-top: 70px;
-  border-top: 1px solid #e5e5e5;
-  background-color: #f5f5f5;
+.navbar-info, .form-control {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+#cuerpo {
+  margin-bottom: 70px;
+}
+
+/*---------------Estilo barra de navegacion y footer ........................*/
+
+.navbar {
+  background-color: #eee;
+  border-color: #e7e7e7;
 }
 
 .navbar .brand {
   padding: 15px 10px 10px;
 }
-.navbar .nav>li>a {
-  padding: 20px 5px;
+
+.navbar-nav >li{
+  border: 1px solid transparent;
 }
+
+.navbar-nav >li >a{
+  color: #000;
+}
+
+.navbar-nav >li:hover{
+  border: 1px solid #ddd;
+}
+
+.navbar-nav > li > a:hover{
+  color: #428bca;
+}
+
+.btn-default {
+  border-radius: 0px;
+}
+
+.btn-default:hover {
+  background-color: #3498db;
+  color: #fff;
+}
+
+.navbar .navbar-toggle .icon-bar {
+  background-color: #888;
+}
+
+.navbar .navbar-toggle {
+  border-color: #ddd;
+}
+
+.navbar .navbar-toggle:hover, .navbar .navbar-toggle:focus {
+  background-color: #ddd;
+}
+
+.input-group-addon, .form-control{
+  border-radius: 0px;
+  background-color: #fff;
+}
+
+.navbar-fixed-bottom {
+  text-align: center;
+  min-height: 30px;
+  padding-top: 10px;
+  background-color: #e7e7e7;
+}
+
+.footer-link:hover {
+  text-decoration: none;
+}
+
+
+.dropdown-submenu {
+    position: relative;
+}
+
+.dropdown-submenu>.dropdown-menu {
+    top: 0;
+    left: 100%;
+    margin-top: -6px;
+    margin-left: -1px;
+    -webkit-border-radius: 0 6px 6px 6px;
+    -moz-border-radius: 0 6px 6px;
+    border-radius: 0 6px 6px 6px;
+}
+
+.dropdown-submenu:hover>.dropdown-menu {
+    display: block;
+}
+
+.dropdown-submenu>a:after {
+    display: block;
+    content: " ";
+    float: right;
+    width: 0;
+    height: 0;
+    border-color: transparent;
+    border-style: solid;
+    border-width: 5px 0 5px 5px;
+    border-left-color: #ccc;
+    margin-top: 5px;
+    margin-right: -10px;
+}
+
+.dropdown-submenu:hover>a:after {
+    border-left-color: #fff;
+}
+
+.dropdown-submenu.pull-left {
+    float: none;
+}
+
+.dropdown-submenu.pull-left>.dropdown-menu {
+    left: -100%;
+    margin-left: 10px;
+    -webkit-border-radius: 6px 0 6px 6px;
+    -moz-border-radius: 6px 0 6px 6px;
+    border-radius: 6px 0 6px 6px;
+}
+
+@media(max-width: 767px){
+  .navbar-fixed-bottom {
+    font-size: 11px;
+  }
+}
+
+/*--------------- Fin Estilo barra de navegacion y footer ........................*/
+
+
+/*--------------- Estilo de Grid ........................*/
+
+.grid-container {
+  box-shadow: inset 0px 0px 0px px rgba(0,0,0,0.1);
+  background-color: #e7e7e7;
+  padding: 5px;
+  margin-top: 10px;
+}
+
+.grid-container > p{
+  text-align: justify;
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.grid-container > a {
+  color: #000;
+}
+
+.grid-container > a:hover{
+  color: #428bca;
+}
+
+.grid-container > a > h5{
+  font-weight: bold;
+}
+
+/*--------------- Fin de Estilo de Grid ........................*/
+
+
+/*--------------- Estilo de Formulario ........................*/
+
+.msj-error {
+  color:#b94a48;
+}
+
+.msj-error-titulo {
+  font-weight:bold;
+}
+
+.errorlist {
+  background-color: #f2dede;
+  border-color: #ebccd1;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  margin-top: 0px;
+  margin-bottom: 5px;
+}
+
+.form-button {
+  margin-top: 3px;
+}
+
+.textarea.form-control {
+  height: 120px;
+  resize: none;
+}
+
+.ui-widget {
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+.link-form {
+  padding: 12px;
+}
+
+/*--------------- Fin de Estilo de Formulario ........................*/
+
+
+
 
 td img {
   width:24px;

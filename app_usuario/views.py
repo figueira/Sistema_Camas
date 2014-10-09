@@ -74,7 +74,7 @@ def usuario_solicitar(request):
             u_cedula           = pcd['cedula']
             u_nombres          = pcd['nombres']
             u_apellidos        = pcd['apellidos']
-            u_tipo		         = pcd['tipo']
+            u_tipo		       = pcd['tipo']
             u_sexo             = pcd['sexo']
             u_cel              = pcd['cod_cel'] + pcd['num_cel']
             u_direccion        = pcd['direccion']
@@ -173,7 +173,7 @@ def clave_cambiar(request):
                 else:
                     mensaje = "Las dos claves son distintas"
             else:
-                mensaje = "La clave vieja no es correcta"
+                mensaje = "La clave antigua no es correcta"
         else:
             mensaje = "Error con el formulario"
         info = {'form':form,'mensaje':mensaje}
@@ -252,7 +252,7 @@ def usuario_crear(request):
                 msj_info = "Ya hay un usuario registrado con esa cedula."     
         else:
         	msj_info = "Error con el formulario."
-        msj_tipo = "error"
+        msj_tipo = "danger"
         info = {'msj_tipo':msj_tipo,'msj_info':msj_info,'form':form}
         return render_to_response('crear_usuario.html',info,context_instance=RequestContext(request))
     form = SolicitarCuenta()

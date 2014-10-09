@@ -9,24 +9,82 @@ class IniciarSesionForm(forms.Form):
                       widget = forms.TextInput(
                                  attrs = {
                                      'placeholder': 'Cedula de identidad:',
-                                     'class': 'span2'
+                                     'class': 'form-control'
                                      }))
     uclave = forms.CharField(max_length = 32,
                              widget = forms.PasswordInput(attrs = {
                                  'placeholder':'Clave:',
-                                 'class':'span2'
+                                 'class':'form-control'
                                  }))
 
 
 class SolicitarCuenta(forms.Form):
-    cedula          = forms.IntegerField(widget=forms.TextInput)
-    nombres         = forms.CharField()
-    apellidos       = forms.CharField()
-    tipo            = forms.ChoiceField(choices = USUARIO)
-    email           = forms.EmailField(max_length = 64)
-    email0          = forms.EmailField(max_length = 64)
-    clave           = forms.CharField(widget = forms.PasswordInput())
-    clave0          = forms.CharField(widget = forms.PasswordInput())
+    cedula          = forms.IntegerField(
+                        widget=forms.NumberInput(
+                            attrs = {
+                                'placeholder': 'Cedula de identidad',
+                                'class': 'form-control'
+                            }
+                        )
+                    )
+    nombres         = forms.CharField(
+                        widget=forms.TextInput(
+                            attrs = {
+                                'placeholder': 'Nombre',
+                                'class': 'form-control'
+                            }
+                        )
+                    )
+    apellidos       = forms.CharField(
+                        widget=forms.TextInput(
+                            attrs = {
+                                'placeholder': 'Apellido',
+                                'class': 'form-control'
+                            }
+                        )
+                    )
+    tipo            = forms.ChoiceField(
+                        choices = USUARIO,
+                        widget=forms.Select(
+                            attrs={
+                                'class':'form-control'
+                            }
+                        )
+                    )
+    email           = forms.EmailField(
+                        max_length = 64,
+                        widget=forms.EmailInput(
+                            attrs = {
+                                'placeholder': 'Email',
+                                'class': 'form-control'
+                            }
+                        )
+                    )
+    email0          = forms.EmailField(
+                        max_length = 64,
+                        widget=forms.EmailInput(
+                            attrs = {
+                                'placeholder': 'Confirmacion de Email',
+                                'class': 'form-control'
+                            }
+                        )
+                    )
+    clave           = forms.CharField(
+                        widget = forms.PasswordInput(
+                            attrs = {
+                                'placeholder': 'Clave',
+                                'class': 'form-control'
+                            }
+                        )
+                    )
+    clave0          = forms.CharField(
+                        widget = forms.PasswordInput(
+                            attrs = {
+                                'placeholder': 'Confirmacion de Clave',
+                                'class': 'form-control'
+                            }
+                        )
+                    )
     administrador   = forms.BooleanField(required = False)
 
 #class cambioClave(forms.Form):

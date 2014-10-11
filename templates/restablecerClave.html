@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+	{% if mensaje %}
+		{{ mensaje }}
+	{% endif %}
+
+	<form class= "tablaAgregar" method="post" action="/usuario/restablecer">
+		
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container">
+					<h4 class="text-center">
+						Recuperar Clave
+					</h4>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row">
+		
+			{% csrf_token %}
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container clearfix">
+					
+					<br>
+
+					<span class="msj-error">
+						{{form.correo.errors}} 
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{form.correo}}
+					</div>
+					<br>
+
+				</div>
+			</div>
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container clearfix">
+					
+					<br>
+
+					<span class="msj-error">
+						{{form.usuario.errors}} 
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{form.usuario}}
+					</div>
+					<br>
+
+				</div>
+			</div>
+		
+		</div>
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container clearfix">
+					<div class="pull-right">
+						<input class="btn btn-default form-button" type="submit" value="Recuperar Clave" />
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+
+	</form>			
+
+{% endblock %}
+

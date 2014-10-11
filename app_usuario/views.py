@@ -189,11 +189,12 @@ def clave_restablecer(request):
         if form.is_valid():
             pcd = form.cleaned_data
             f_correo = pcd['correo']
+            f_usuario = pcd['usuario']
             usuario = Usuario.objects.filter(email=f_correo)
             if len(usuario) == 0 :
                 mensaje = "Correo Invalido"
             else:
-                usuario = usuario[0]
+                usuario = Usuario.objects.get(username=f_usuario)
                 clave = User.objects.make_random_password()
                 email = EmailMessage('[GenSE] Admin - Cambio de Clave','Estimado/a '+usuario.first_name+' '+usuario.last_name+'\n\nSe recibio una solicitud de cambiar su clave, la nueva clave es: '+clave+'\n\nSaludos,\nAdministrador del Sistema', to=[f_correo]) 
                 email.send()

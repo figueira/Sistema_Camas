@@ -87,6 +87,15 @@ class SolicitarCuenta(forms.Form):
                     )
     administrador   = forms.BooleanField(required = False)
 class restablecerClave(forms.Form):
+    
+    usuario          = forms.IntegerField(
+                        widget=forms.NumberInput(
+                            attrs = {
+                                'placeholder': 'Cedula de identidad',
+                                'class': 'form-control'
+                            }
+                        )
+                    )        
     correo           = forms.EmailField(
                         max_length = 64,
                         widget=forms.EmailInput(
@@ -95,15 +104,7 @@ class restablecerClave(forms.Form):
                                 'class': 'form-control'
                             }
                         )
-                    )
-    usuario          = forms.IntegerField(
-                        widget=forms.NumberInput(
-                            attrs = {
-                                'placeholder': 'Cedula de identidad',
-                                'class': 'form-control'
-                            }
-                        )
-                    )              
+                    )  
 #class cambioClave(forms.Form):
     #claveV = forms.CharField(widget = forms.PasswordInput())
     #clave = forms.CharField(widget = forms.PasswordInput())

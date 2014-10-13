@@ -122,7 +122,7 @@ def usario_listarRechazados(request):
     return render_to_response('usuariosPendientes.html',info,context_instance=RequestContext(request))
 
 @login_required(login_url='/')
-def usuario_listar(request):    
+def usuario_listar(request):
     listaU = Usuario.objects.all()
     info = {
         'listaU':listaU

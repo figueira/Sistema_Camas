@@ -13,19 +13,42 @@ USUARIO = (
 class Usuario(User):
     tipo = models.CharField(max_length = 1, choices = USUARIO)
 
-    def tipoR(self):
-        return USUARIO[self.tipo][1]
-    
     def is_admin(self):
         return (self.tipo == 'A')
+
     def is_medico(self):
         return (self.tipo == 'M')
+
     def is_limpieza(self):
         return (self.tipo == 'L')
+
     def is_sol(self):
         return (self.tipo == 'S')
+
     def is_resp(self):
         return (self.tipo == 'R')
+
+
+    def tipoR(self):
+        tipoUsuario = ""
+        if self.is_admin():
+            tipoUsuario = 'Administracion'
+
+        elif self.is_resp():
+            tipoUsuario = 'Responsable'
+
+        elif self.is_medico():
+            tipoUsuario = 'Medico'
+
+        elif self.is_limpieza():
+            tipoUsuario = 'Limpieza'
+
+        elif self.is_sol():
+            tipoUsuario = 'Solicitante'
+
+        return tipoUsuario
+
+
     
 
 class Medico(Usuario):

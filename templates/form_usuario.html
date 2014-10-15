@@ -1,0 +1,277 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+
+	<script>
+
+		function cambiar_clave_form() {
+			$('#cambiarClaveForm').fadeToggle();
+		}
+
+		$(document).ready( function() {
+			$("#cambiar_clave_checkbox").change(cambiar_clave_form);
+		});
+
+	</script>
+
+{% endblock %} 
+
+{% block body %}
+
+	{% if mensaje %}
+		{{ mensaje }}
+	{% endif %}
+
+	{% if usuario %}
+		<form class= "tablaAgregar" method="post" action="/usuario/listar/{{usuario.username}}/editar">
+	{% else %}
+		<form class= "tablaAgregar" method="post" action="/usuario/crear">
+	{% endif %}		
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container">
+					<h4 class="text-center">
+						{% if usuario %}
+							Editar Usuario
+						{% else %}
+							Crear Nuevo Usuario
+						{% endif %}						
+					</h4>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row">
+		
+			{% csrf_token %}
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+					
+					<br>
+
+					<span class="msj-error">
+						{{form.cedula.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-credit-card"></span>
+						</span>
+						{{form.cedula}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.nombres.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-user"></span>
+						</span>
+						{{form.nombres}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.email.errors}} 
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{form.email}}
+					</div>
+
+					<br>
+
+					{% if not usuario %}
+						<span class="msj-error">
+							{{form.clave.errors}}
+						</span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-certificate"></span>
+							</span>
+							{{form.clave}}
+						</div>
+
+						<br>
+					{% endif %}
+
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+					
+					<br>
+
+					<span class="msj-error">
+						{{form.tipo.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-tower"></span>
+						</span>
+						{{form.tipo}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.apellidos.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-user"></span>
+						</span>
+						{{form.apellidos}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{form.email0.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{form.email0}}
+					</div>
+
+					<br>
+
+					{% if not usuario %}
+						<span class="msj-error">
+							{{form.clave0.errors}}
+						</span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-certificate"></span>
+							</span>
+							{{form.clave0}}
+						</div>
+
+						<br>
+					{% endif %}
+
+				</div>
+			</div>
+		
+		</div>
+
+		{% if usuario %}
+
+			<div class="row">
+				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+					<div class="grid-container clearfix">
+
+						<div class="checkbox pull-left">
+							<div>
+								<span class="msj-error">
+									{{form.cambiarClave.errors}}
+								</span>
+							</div>
+							<div>
+								<label>
+									&nbsp; {{form.cambiarClave}} Cambiar Clave
+								</label>
+							</div>
+						</div>	
+
+					</div>
+				</div>
+			</div>
+							
+			<div id="cambiarClaveForm" class="row" style="display: none">
+
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+					<div class="grid-container">
+
+						<br>
+						<span class="msj-error">
+							{{form.clave.errors}}
+						</span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-certificate"></span>
+							</span>
+							{{form.clave}}
+						</div>
+
+						<br>
+						<span class="msj-error">
+							{{form.claveNueva.errors}}
+						</span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-certificate"></span>
+							</span>
+							{{form.claveNueva}}
+						</div>
+						
+						<br>
+					</div>
+				</div>
+
+				<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+					<div class="grid-container">
+
+						<br>
+						<span class="msj-error">
+							{{form.claveNueva0.errors}}
+						</span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-certificate"></span>
+							</span>
+							{{form.claveNueva0}}
+						</div>
+
+						<br>
+					</div>
+				</div>
+
+			</div>
+
+		{% endif %}
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container clearfix">
+
+					<div class="checkbox  pull-left">
+						<div>
+							<span class="msj-error">
+								{{form.administrador.errors}}
+							</span>
+						</div>
+						<div>
+							<label>
+								&nbsp; {{form.administrador}} Agregar usuario como Administrador
+							</label>
+						</div>
+					</div>	
+
+					<div class="pull-right">
+						{% if usuario %}
+							<input class="btn btn-default form-button" type="submit" value="Editar Usuario" />
+						{% else %}
+							<input class="btn btn-default form-button" type="submit" value="Crear Usuario" />
+						{% endif %}
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</form>			
+
+{% endblock %}
+

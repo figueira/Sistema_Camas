@@ -1,82 +1,76 @@
 {% extends "base.html" %}
+
 {% block body %}
-  {% if mensaje %}
-    {{mensaje}}
-  {% endif %}
-  <div class="row">
-    <div class="cuadroGrande span12 centrar">
-      <div class="titulo">
-        Lista de usuarios
-      </div>
-      <table class="table table-bordered table-striped">
-        <tr>
-        <th>C&eacute;dula</th>
-        <th>Nombre</th>
-        <th>Tipo</th>
-        <th>Administrador</th>
-        <th>Habilitado</th>
-<!--         <th>Acciones</th> -->
-      </tr>
-        {% for l in listaU %}
-          <tr>
-            <td>
-              <span class="nombreLista">
-                {{l.username}}
-              </span>
-            </td>
-            <td>
-              <span class="nombreLista">
-                {{l.first_name}} {{l.last_name}}
-              </span>
-            </td>
-            <td>
-              <span class="nombreLista">
-                {{l.tipoR}}
-              </span>
-            </td>
-            {% if l.is_staff != True %}
-              <td>
-                <span class="nombreLista">
-                  No
-                </span>
-              </td>
-            {% else %}
-              <td>
-                <span class="nombreLista">
-                  Si
-                </span>
-              </td>
-            {% endif %}
-            {% if l.is_active != True %}
-              <td>
-                <span class="nombreLista">
-                  No
-                </span>
-              </td>
-            {% else %}
-              <td>
-                <span class="nombreLista">
-                  Si
-                </span>
-              </td>
-            {% endif %}
-            <!--<td>
-            {% if l.is_active != True %}
-              <a href="/usuario/listar/{{l.usuario.cedula}}/habilitar">
-                <img src="/static/img/usuarios/aprobar.png" title="Habilitar"/>
-              </a>
-            {% else %}
-              <a href="/usuario/listar/{{l.usuario.cedula}}/deshabilitar">
-                <img src="/static/img/usuarios/negar.png" title="Deshabilitar"/>
-              </a>
-            {% endif %}
-              <a href="/usuario/listar/{{l.usuario.cedula}}/examinar">
-                <img src="/static/img/usuarios/lupa.png" title="Examinar"/>
-              </a>
-            </td>-->
-          </tr>
-        {% endfor %}
-      </table>
-    </div>
-  </div>
+	
+	{% if mensaje %}
+		{{mensaje}}
+	{% endif %}
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				
+				<h4 class="text-center">
+					Lista de usuarios
+				</h4>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				
+				<br>
+				
+				<table class="table table-bordered table-striped">
+					<thead>
+						<tr>
+							<th>C&eacute;dula</th>
+							<th>Nombre</th>
+							<th>Tipo</th>
+							<th>Habilitado</th>
+							<th>Acciones</th>
+						</tr>
+					</thead>
+
+					<tbody>
+						{% for l in listaU %}
+						<tr>
+							<td>
+								{{l.username}}
+							</td>
+							<td>
+								{{l.first_name}} {{l.last_name}}
+							</td>
+							<td>
+								{{l.tipoR}}
+							</td>
+
+							{% if l.is_active != True %}
+							<td> <input type="checkbox"> </td>
+
+							{% else %}
+							<td> <input type="checkbox" checked> </td>
+
+							{% endif %}
+
+							<td>
+								<a href="/usuario/listar/{{l.username}}/editar" class= "table-link">
+									<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp; 
+								</a>
+								<a href="/usuario/listar/{{l.username}}/borrar" class= "table-link">
+									<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;
+								</a>
+							</td>
+						</tr>
+						{% endfor %}
+					</table>
+				</tbody>
+
+			</div>
+		</div>
+	</div>
+
 {% endblock %}

@@ -207,6 +207,28 @@ body {
 /*--------------- Fin de Estilo de Formulario ........................*/
 
 
+/*--------------- Estilo de Tablas ........................*/
+
+.table {
+  border: 3px solid #ddd;
+}
+
+.table, .data-font {
+  font-family: Helvetica, Arial, sans-serif;
+}
+
+.table-link:hover {
+  text-decoration: none;
+}
+
+@media(max-width: 767px) {
+  .table {
+    font-size: 11px;
+  }
+}
+
+/*--------------- Estilo de Tablas ........................*/
+
 
 
 td img {

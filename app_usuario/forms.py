@@ -43,7 +43,7 @@ class BaseUserForm(forms.Form):
 							}
 						)
 					)
-	tipo            = forms.ChoiceField(
+	tipo			= forms.ChoiceField(
 						choices = USUARIO,
 						widget=forms.Select(
 							attrs={
@@ -130,8 +130,48 @@ class EditarCuenta(BaseUserForm):
 					)
 
 
+class buscarUsuarioForm(forms.Form):
+	cedula          = forms.IntegerField(
+						required = False,
+						widget=forms.NumberInput(
+							attrs = {
+								'placeholder': 'Cedula de identidad',
+								'class': 'form-control'
+							}
+						)
+					)	
+	nombres         = forms.CharField(
+						required = False,
+						widget=forms.TextInput(
+							attrs = {
+								'placeholder': 'Nombre',
+								'class': 'form-control'
+							}
+						)
+					)
+	apellidos       = forms.CharField(
+						required = False,
+						widget=forms.TextInput(
+							attrs = {
+								'placeholder': 'Apellido',
+								'class': 'form-control'
+							}
+						)
+					)
+	tipo			= forms.ChoiceField(
+						required = False,
+						choices = USUARIO_OPTIONAL,
+						widget=forms.Select(
+							attrs={
+								'class':'form-control'
+							}
+						)
+					)
+	habilitado   = forms.BooleanField(required = False)
+
+
+
 class restablecerClave(forms.Form):
-	
 	usuario          = forms.IntegerField(
 						widget=forms.NumberInput(
 							attrs = {

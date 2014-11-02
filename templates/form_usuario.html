@@ -23,9 +23,9 @@
 	{% endif %}
 
 	{% if usuario %}
-		<form class= "tablaAgregar" method="post" action="/usuario/listar/{{usuario.username}}/editar">
+		<form method="post" action="/usuario/listar/{{usuario.username}}/editar">
 	{% else %}
-		<form class= "tablaAgregar" method="post" action="/usuario/crear">
+		<form method="post" action="/usuario/crear">
 	{% endif %}		
 		<div class="row">
 

@@ -1,5 +1,35 @@
 {% extends "base.html" %}
 
+{% block scripts %}
+
+	<script src="{{ STATIC_URL }}libs/jquery/js/jquery.form.min.js"></script>
+	<script>
+
+		function show_form() {
+			$('#form-buscar').fadeToggle();
+		}
+	
+		// prepare Options Object for plugin
+        var options = {
+            success: function(data) {
+				$('#table-user-body').html(data);
+            },
+            error:  function(resp) {
+                console.log("Fallo");
+            }
+        };
+        
+
+
+		$(document).ready( function() {
+			$("#show-form-link").click(show_form);
+			$('#form-buscar').ajaxForm(options);
+		});
+
+	</script>
+
+{% endblock %} 
+
 {% block body %}
 	
 	{% if mensaje %}
@@ -21,10 +51,45 @@
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="grid-container">
+				<a id="show-form-link" href="#">
+					<span class="glyphicon glyphicon-plus"></span>
+					Buscar Usuarios
+				</a>
+			</div>
+		</div>
+	</div>
+
+	<form id="form-buscar" method="post" action="/usuario/listar/buscar" style="display: none">
+		{% csrf_token %}
+		<div class="row">
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+					{{form.cedula}}
+					{{form.nombres}}
+					<br>
+					<span>
+						&nbsp; {{form.habilitado}} Usuario Habilitado
+					</span>
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container clearfix">
+					{{form.tipo}}
+					{{form.apellidos}}
+					<input class="btn btn-default form-button pull-right" type="submit" value="Buscar" />
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
 				
 				<br>
 				
-				<table class="table table-bordered table-striped">
+				<table id="table-user" class="table table-bordered table-striped">
 					<thead>
 						<tr>
 							<th>C&eacute;dula</th>
@@ -35,7 +100,7 @@
 						</tr>
 					</thead>
 
-					<tbody>
+					<tbody id="table-user-body">
 						{% for l in listaU %}
 						<tr>
 							<td>

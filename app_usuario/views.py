@@ -1,3 +1,5 @@
+import json
+
 # -*- encoding: utf-8 -*-
 # Manejo de Sesion
 from django.contrib.auth import authenticate, login, logout
@@ -5,12 +7,13 @@ from django.contrib.auth.decorators import login_required
 
 # Formularios
 from django.core.context_processors import csrf
+from django.core import serializers
 from django.template import RequestContext
 from django.forms.widgets import CheckboxSelectMultiple
 
 # General HTML
 from django.shortcuts import render_to_response,redirect,get_object_or_404
-from django.http import HttpResponse, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseBadRequest
 
 # Manejo de Informacion de esta aplicacion
 from forms import *
@@ -19,7 +22,7 @@ from models import *
 # Envio de Correos
 from django.core.mail import EmailMessage
 
-# Create your views here.
+
 def sesion_iniciar(request):
 	
 	if request.user.is_authenticated():
@@ -61,126 +64,11 @@ def sesion_iniciar(request):
 	info = {'form':form}
 	return render_to_response('index.html',info,context_instance=RequestContext(request))
 
+
 def sesion_cerrar(request):
 	logout(request)
 	return redirect('/')
 
-def usuario_solicitar(request):
-	mensaje = ""
-	if request.method == 'POST':
-		form = SolicitarCuenta(request.POST)
-		if form.is_valid():
-			pcd = form.cleaned_data
-			u_cedula           = pcd['cedula']
-			u_nombres          = pcd['nombres']
-			u_apellidos        = pcd['apellidos']
-			u_tipo		       = pcd['tipo']
-			u_sexo             = pcd['sexo']
-			u_cel              = pcd['cod_cel'] + pcd['num_cel']
-			u_direccion        = pcd['direccion']
-			u_tlf_casa         = pcd['cod_casa'] + pcd['num_casa']
-			u_email            = pcd['email']
-			u_clave            = pcd['clave']
-			u_clave0           = pcd['clave0']
-			u_administrador    = pcd['administrador']
-			prueba = Usuario.objects.filter(cedula=u_cedula)
-			prueba2 = (u_clave==u_clave0)
-			if not prueba:
-				if prueba2:
-					  u = Usuario(username=u_cedula,cedula=u_cedula,first_name=u_nombres,habilitado=False,last_name=u_apellidos,tipo=u_tipo,administrador=u_administrador,sexo=u_sexo,tlf_cel=u_cel,direccion=u_direccion,tlf_casa=u_tlf_casa,email=u_email,password=u_clave)
-					  u.is_active = True
-					  u.set_password(u_clave)
-					  if u_administrador == True:
-						  u.is_staff = True
-					  u.save() 	
-					  return redirect('/')
-				else:
-						msj_info = "No hubo coincidencia con las claves ingresadas"     
-			else:
-					msj_info = "Ya hay un usuario registrado con esa cedula"     
-		else:
-			msj_info = "Error con el formulario"
-		msj_tipo = "error"
-		info = {'msj_tipo':msj_tipo,'msj_info':msj_info,'form':form}
-		return render_to_response('solicitar.html',info,context_instance=RequestContext(request))
-	form = SolicitarCuenta()
-	info = {'form':form}
-	return render_to_response('solicitar.html',info,context_instance=RequestContext(request))
-
-@login_required(login_url='/')
-def usario_listarPendientes(request):    
-	listaP = Usuario.objects.all()
-	info = {
-		'listaP':listaP
-		} 
-	return render_to_response('usuarios_pendientes.html',info,context_instance=RequestContext(request))
-
-@login_required(login_url='/')
-def usario_listarRechazados(request):    
-	listaP = Usuario.objects.filter(habilitado=False)
-	info = {'listaP':listaP}
-	return render_to_response('usuariosPendientes.html',info,context_instance=RequestContext(request))
-
-@login_required(login_url='/')
-def usuario_listar(request):
-	listaU = Usuario.objects.order_by('-username')
-	info = {
-		'listaU':listaU
-		}
-	return render_to_response('lista_usuarios.html',info,context_instance=RequestContext(request))
-
-@login_required(login_url='/')
-def usuario_rechazar(request,cedulaU):
-	usuario = get_object_or_404(Usuario,cedula=cedulaU)
-	usuario.delete()
-	return redirect("/usuario/pendientes")
-
-@login_required(login_url='/')
-def usuario_aprobar(request,cedulaU):
-	usuario = get_object_or_404(Usuario,cedula=cedulaU)
-	usuario.habilitado = True
-	usuario.is_active = True
-	usuario.save()
-	email = EmailMessage('[GenSE] Admin - Activacion de Cuenta','Estimado/a '+usuario.first_name+' '+usuario.last_name+'\n\nSe aprobo su solicitud de activacion de cuenta\n\nSaludos,\nAdministrador del Sistema', to=[usuario.email]) 
-	email.send()
-	return redirect("/usuario/pendientes")
-
-@login_required(login_url='/')
-def pendiente_examinar(request,cedulaU):
-	usuario = get_object_or_404(Usuario,cedula=cedulaU)
-	info = {'usuario':usuario}
-	return render_to_response('pendienteExaminar.html',info,context_instance=RequestContext(request))
-
-@login_required(login_url='/')
-def clave_cambiar(request):
-	mensaje = ""
-	if request.method == 'POST':
-		form = cambioClave(request.POST)
-		if form.is_valid():
-			pcd = form.cleaned_data
-			f_claveV          = pcd['claveV']
-			f_clave           = pcd['clave']
-			f_claveO          = pcd['claveO']
-			usuario           = Usuario.objects.get(username=request.user)
-			if usuario.check_password(f_claveV):
-				if (f_clave == f_claveO):
-					usuario.set_password(f_clave)
-					usuario.save()
-					mensaje = "Clave cambiada"
-					form = cambioClave()
-					info = {'form':form,'mensaje':mensaje}
-					return render_to_response('cambiarClave.html',info,context_instance=RequestContext(request))                    
-				else:
-					mensaje = "Las dos claves son distintas"
-			else:
-				mensaje = "La clave antigua no es correcta"
-		else:
-			mensaje = "Error con el formulario"
-		info = {'form':form,'mensaje':mensaje}
-		return render_to_response('cambiarClave.html',info,context_instance=RequestContext(request))
-	form = cambioClave()
-	info = {'form':form,'mensaje':mensaje}
-	return render_to_response('cambiarClave.html',info,context_instance=RequestContext(request))
 
 def clave_restablecer(request):
 	mensaje = ""
@@ -210,6 +98,7 @@ def clave_restablecer(request):
 	form = IniciarSesionForm()
 	info = {'form':form,'formRestablecer':formRestablecer,'mensaje':mensaje}
 	return render_to_response('restablecerClave.html',info,context_instance=RequestContext(request))
+
 
 def usuario_crear(request):
 	mensaje = ""
@@ -261,19 +150,14 @@ def usuario_crear(request):
 	info = {'form':form}
 	return render_to_response('form_usuario.html',info,context_instance=RequestContext(request))
 
-@login_required(login_url='/')
-def usuario_deshabilitar(request,cedulaU):
-	#usuario = get_object_or_404(Usuario,cedula=cedulaU)
-	usuario.is_active = False
-	usuario.save()
-	return redirect("/usuario/listar")
 
 @login_required(login_url='/')
-def usuario_habilitar(request,cedulaU):
-	#usuario = get_object_or_404(Usuario,cedula=cedulaU)
-	usuario.is_active = True
-	usuario.save()
-	return redirect("/usuario/listar")
+def usuario_listar(request):
+	listaU = Usuario.objects.order_by('-username')
+	form = buscarUsuarioForm()
+	info = { 'listaU':listaU, 'form':form }
+	return render_to_response('lista_usuarios.html',info,context_instance=RequestContext(request))
+
 
 @login_required(login_url='/')
 def usuario_editar(request, username):
@@ -332,7 +216,201 @@ def usuario_editar(request, username):
 
 
 @login_required(login_url='/')
+def usuario_buscar(request):
+	if request.POST:
+		form = buscarUsuarioForm(request.POST)
+		if form.is_valid():
+			
+			rows = ""
+			pcd = form.cleaned_data 
+			cedula = pcd['cedula'] if pcd['cedula'] !=None else ""
+			nombres = pcd['nombres'] if pcd['nombres'] !=None else ""
+			apellidos = pcd['apellidos'] if pcd['apellidos'] !=None else ""
+			tipo = pcd['tipo']
+
+			if (cedula != None or nombres or None or apellidos or None or tipo != None):
+				if tipo != None:
+					users = Usuario.objects.filter(first_name__icontains=nombres, last_name__icontains=apellidos, tipo=tipo, username__icontains=cedula)
+				else:
+					users = Usuario.objects.filter(first_name__icontains=nombres, last_name__icontains=apellidos, username__icontains=cedula)
+			else:
+				users = Usuario.objects.order_by('-username')
+
+			# Only executed with jQuery form request
+			if request.is_ajax():
+				info = crear_respuesta_buscar(users)
+				return HttpResponse(info)
+			else:
+				return HttpResponse('La peticion no es valida')
+	else:
+		return HttpResponse('BAD BOY')
+
+
+@login_required(login_url='/')
 def usuario_examinar(request,cedulaU):
     #usuario = get_object_or_404(Usuario,cedula=cedulaU)
     info = {'usuario':usuario}
     return render_to_response('usuarioExaminar.html',info)
+
+
+
+def crear_respuesta_buscar(users):
+	ini = "<td>"
+	fin = "</td>"
+	data = ""
+	for info in users:
+		data += "<tr>"
+		data+= ini + info.username + fin + ini + info.first_name + info.last_name + fin + ini + info.tipoR() + fin
+		if info.is_active:
+			data += ini + "<input type=\"checkbox\" checked>" + fin
+		else:
+			data += ini + "<input type=\"checkbox\">" + fin
+		data += ini 
+		data += "<a href=\"/usuario/listar/" + info.username + "/editar\" class= \"table-link\">"
+		data += "<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;&nbsp;" 
+		data += "</a>"
+		data += "<a href=\"/usuario/listar/" + info.username + "/borrar\" class= \"table-link\">"
+		data += "<span class=\"glyphicon glyphicon-trash\"></span>&nbsp;&nbsp;" 
+		data += "</a>"
+		data += fin
+		data += "</tr>"
+	return data
+
+
+
+
+
+
+
+def usuario_solicitar(request):
+	mensaje = ""
+	if request.method == 'POST':
+		form = SolicitarCuenta(request.POST)
+		if form.is_valid():
+			pcd = form.cleaned_data
+			u_cedula           = pcd['cedula']
+			u_nombres          = pcd['nombres']
+			u_apellidos        = pcd['apellidos']
+			u_tipo		       = pcd['tipo']
+			u_sexo             = pcd['sexo']
+			u_cel              = pcd['cod_cel'] + pcd['num_cel']
+			u_direccion        = pcd['direccion']
+			u_tlf_casa         = pcd['cod_casa'] + pcd['num_casa']
+			u_email            = pcd['email']
+			u_clave            = pcd['clave']
+			u_clave0           = pcd['clave0']
+			u_administrador    = pcd['administrador']
+			prueba = Usuario.objects.filter(cedula=u_cedula)
+			prueba2 = (u_clave==u_clave0)
+			if not prueba:
+				if prueba2:
+					  u = Usuario(username=u_cedula,cedula=u_cedula,first_name=u_nombres,habilitado=False,last_name=u_apellidos,tipo=u_tipo,administrador=u_administrador,sexo=u_sexo,tlf_cel=u_cel,direccion=u_direccion,tlf_casa=u_tlf_casa,email=u_email,password=u_clave)
+					  u.is_active = True
+					  u.set_password(u_clave)
+					  if u_administrador == True:
+						  u.is_staff = True
+					  u.save() 	
+					  return redirect('/')
+				else:
+						msj_info = "No hubo coincidencia con las claves ingresadas"     
+			else:
+					msj_info = "Ya hay un usuario registrado con esa cedula"     
+		else:
+			msj_info = "Error con el formulario"
+		msj_tipo = "error"
+		info = {'msj_tipo':msj_tipo,'msj_info':msj_info,'form':form}
+		return render_to_response('solicitar.html',info,context_instance=RequestContext(request))
+	form = SolicitarCuenta()
+	info = {'form':form}
+	return render_to_response('solicitar.html',info,context_instance=RequestContext(request))
+
+@login_required(login_url='/')
+def usario_listarPendientes(request):    
+	listaP = Usuario.objects.all()
+	info = {
+		'listaP':listaP
+		} 
+	return render_to_response('usuarios_pendientes.html',info,context_instance=RequestContext(request))
+
+@login_required(login_url='/')
+def usario_listarRechazados(request):    
+	listaP = Usuario.objects.filter(habilitado=False)
+	info = {'listaP':listaP}
+	return render_to_response('usuariosPendientes.html',info,context_instance=RequestContext(request))
+
+
+
+@login_required(login_url='/')
+def usuario_rechazar(request,cedulaU):
+	usuario = get_object_or_404(Usuario,cedula=cedulaU)
+	usuario.delete()
+	return redirect("/usuario/pendientes")
+
+@login_required(login_url='/')
+def usuario_aprobar(request,cedulaU):
+	usuario = get_object_or_404(Usuario,cedula=cedulaU)
+	usuario.habilitado = True
+	usuario.is_active = True
+	usuario.save()
+	email = EmailMessage('[GenSE] Admin - Activacion de Cuenta','Estimado/a '+usuario.first_name+' '+usuario.last_name+'\n\nSe aprobo su solicitud de activacion de cuenta\n\nSaludos,\nAdministrador del Sistema', to=[usuario.email]) 
+	email.send()
+	return redirect("/usuario/pendientes")
+
+@login_required(login_url='/')
+def pendiente_examinar(request,cedulaU):
+	usuario = get_object_or_404(Usuario,cedula=cedulaU)
+	info = {'usuario':usuario}
+	return render_to_response('pendienteExaminar.html',info,context_instance=RequestContext(request))
+
+@login_required(login_url='/')
+def clave_cambiar(request):
+	mensaje = ""
+	if request.method == 'POST':
+		form = cambioClave(request.POST)
+		if form.is_valid():
+			pcd = form.cleaned_data
+			f_claveV          = pcd['claveV']
+			f_clave           = pcd['clave']
+			f_claveO          = pcd['claveO']
+			usuario           = Usuario.objects.get(username=request.user)
+			if usuario.check_password(f_claveV):
+				if (f_clave == f_claveO):
+					usuario.set_password(f_clave)
+					usuario.save()
+					mensaje = "Clave cambiada"
+					form = cambioClave()
+					info = {'form':form,'mensaje':mensaje}
+					return render_to_response('cambiarClave.html',info,context_instance=RequestContext(request))                    
+				else:
+					mensaje = "Las dos claves son distintas"
+			else:
+				mensaje = "La clave antigua no es correcta"
+		else:
+			mensaje = "Error con el formulario"
+		info = {'form':form,'mensaje':mensaje}
+		return render_to_response('cambiarClave.html',info,context_instance=RequestContext(request))
+	form = cambioClave()
+	info = {'form':form,'mensaje':mensaje}
+	return render_to_response('cambiarClave.html',info,context_instance=RequestContext(request))
+
+
+
+
+
+@login_required(login_url='/')
+def usuario_deshabilitar(request,cedulaU):
+	#usuario = get_object_or_404(Usuario,cedula=cedulaU)
+	usuario.is_active = False
+	usuario.save()
+	return redirect("/usuario/listar")
+
+@login_required(login_url='/')
+def usuario_habilitar(request,cedulaU):
+	#usuario = get_object_or_404(Usuario,cedula=cedulaU)
+	usuario.is_active = True
+	usuario.save()
+	return redirect("/usuario/listar")
+
+
+
+

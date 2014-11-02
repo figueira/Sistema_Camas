@@ -9,6 +9,15 @@ USUARIO = (
     ('S','Solicitante'),
 )
 
+USUARIO_OPTIONAL = (
+    (None,'Seleccione...'),
+    ('A','Administracion'),
+    ('R','Responsable'),
+    ('M','Medico'),
+    ('L','Limpieza'),
+    ('S','Solicitante'),
+)
+
 # Create your models here.
 class Usuario(User):
     tipo = models.CharField(max_length = 1, choices = USUARIO)

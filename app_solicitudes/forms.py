@@ -35,7 +35,7 @@ class SolicitarHabitacion(forms.Form):
                         ),
                         required=False,
                     )
-    fecha_ingreso = forms.DateField(
+    fecha_ingreso2 = forms.DateField(
                         label = "FECHA ESTIMADA DE INGRESO",
                         widget = forms.TextInput(
                             attrs = {
@@ -44,7 +44,7 @@ class SolicitarHabitacion(forms.Form):
                             }
                         )
                     )
-    fecha_salida =  forms.DateField(
+    fecha_salida2 =  forms.DateField(
                         label = "FECHA ESTIMADA DE SALIDA",
                         widget = forms.TextInput(
                             attrs = {

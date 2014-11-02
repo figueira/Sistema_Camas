@@ -363,121 +363,138 @@
 	<div class="cuadroGrande span5">
 		
 		<form id="form-completo" class= "tablaAgregar" method="post" action="/habitacion/solicitar" style="display: none">
-			<h5>
+			<div class="grid-container text-center">
 				Formulario de Solicitud de Habitaci&oacute;n
-			</h5>
+			</div>
 			<br>
 
 			{% csrf_token %}
-			<table>
-
+			
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+			<div class="grid-container">
+			
+				<br>
 				{{form.cedula.as_hidden}}
-
-				<tr>
-					<td>C&oacute;digo del M&eacute;dico tratante</td>
-					<td>{{form.codigo_doctor}}</td>
-					<td>
-						<span class="msj-error"> 
-							{{form.codigo_doctor.errors}}
+					<span class="msj-error">
+						{{form.codigo_doctor.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-barcode"></span>
 						</span>
-					</td>
-				</tr>
-
-				<tr>
-					<td>Diagn&oacute;stico</td>
-					<td>{{form.diagnostico}}</td>
-					<td>
-						<span class="msj-error"> 
-							{{form.diagnostico.errors}}
-						</span>
-					</td>
-				</tr>
-
-				{% for e in form %}
-				<tr>
-					{% if e.label == "FECHA ESTIMADA DE INGRESO" %}
-						<td>Fecha estimada de ingreso&nbsp&nbsp</td>
-						<td>
-							<div id="ingreso_picker" class="input-append">
-								{{e}}
-								<span  class="add-on">
-									<i data-time-icon="icon-time" data-date-icon="icon-calendar"> 
-									</i>
+						{{form.codigo_doctor}}
+					</div>
+											
+					<br>
+					
+					{% for e in form %}
+						{% if e.label == "FECHA ESTIMADA DE INGRESO" %}
+							<span class="msj-error">
+								{{e.errors}} {{ mnj_fecha }}
+							</span>
+							<div class="input-group">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
 								</span>
+								<div id="ingreso_picker" class="input-append">
+									{{e}}
+									<span  class="add-on">
+										<i data-time-icon="icon-time" data-date-icon="icon-calendar"> 
+										</i>
+									</span>
+								</div>
 							</div>
-						</td>
-						<td>
-							{{e.errors}}
-							&nbsp &nbsp{{ mnj_fecha }}
-						</td> 
 
-					{% elif e.label == "FECHA ESTIMADA DE SALIDA" %}
-
-						<td>Fecha estimada de salida&nbsp&nbsp</td>
-						<td>
-							<div id="ingreso_picker" class="input-append">
-								{{e}}
-								<span  class="add-on">
-									<i data-time-icon="icon-time" data-date-icon="icon-calendar"> 
-									</i>
-								</span>
-							</div>
-						</td>
-						<td>
-							{{e.errors}}
-							&nbsp &nbsp{{ mnj_fecha }}
-						</td>
-
-					{% endif %}
-				</tr>
-				{% endfor %}
-
-				<tr>
-					<td>Procedencia</td>
-					<td>{{form.procedencia}}</td>
-					<td>
-						<span class="msj-error">
-							{{form.procedencia.errors}} 
-						</span>
-					</td>
-				</tr>
-
-				<tr>
-					<td>Correo solicitante</td>
-					<td> 
-						{{form.correo_solicitante}}
-					</td>
-					<td>
-						<span class="msj-error"> 
-							{{form.correo_solicitante.errors}}
-						</span>
-					</td>
-				</tr> 
-
-				<tr>
-					<td>Observaciones</td>
-					<td> 
-						{{form.observacion}}
-					</td>
-					<td>
-						<span class="msj-error"> 
-							{{form.observacion.errors}}
-						</span>
-					</td>
-				</tr>   
-
-				<tr>
-					<td></td>
-					<td>
+						{% endif %}
+					{% endfor %}
 						<br>
-						<input class="btn btn-primary" type="submit" value="Solicitar Habitaci&oacute;n" />
-					</td>
-				</tr>
-			</table>
+					{% for e in form %}	
+						{% if e.label == "FECHA ESTIMADA DE SALIDA" %}
+
+							<span class="msj-error">
+								{{e.errors}} {{ mnj_fecha }}
+							</span>
+							<div class="input-group">
+								<span class="input-group-addon">
+									<span class="glyphicon glyphicon-calendar"></span>
+								</span>
+								<div id="ingreso_picker" class="input-append">
+									{{e}}
+									<span  class="add-on">
+										<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+									</span>
+								</div>
+							</div>
+
+						{% endif %}
+					{% endfor %}
+					
+					<br>
+					
+					<span class="msj-error">
+						{{form.procedencia.errors}} 
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-transfer"></span>
+						</span>
+						{{form.procedencia}}
+					</div>
+						
+					<br>
+					
+					<span class="msj-error">
+						{{form.correo_solicitante.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{form.correo_solicitante}}
+					</div>
+					
+					<br>
+					
+					<span class="msj-error">
+						{{form.diagnostico.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-folder-open"></span>
+						</span>
+						{{form.diagnostico}}
+					</div>
+
+					<br>
+					
+					<span class="msj-error">
+						{{form.observacion.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-file"></span>
+						</span>
+						{{form.observacion}}
+					</div>    
+
+					<div class="row">
+						<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+							<div class="grid-container clearfix">
+								<div class="pull-right">
+									<input class="btn btn-primary pull-right" type="submit" value="Solicitar Habitaci&oacute;n" />
+								</div>
+						
+							</div>
+						</div>
+					</div>
+			
+			</div>
+			</div>
+			
 		</form>
 
 		<br>
-		
+		</div>
 		
 
 	</div>

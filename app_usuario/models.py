@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 
+
 USUARIO = (
     ('A','Administracion'),
     ('R','Responsable'),
@@ -10,6 +11,7 @@ USUARIO = (
 )
 
 # Create your models here.
+
 class Usuario(User):
     tipo = models.CharField(max_length = 1, choices = USUARIO)
 
@@ -17,7 +19,7 @@ class Usuario(User):
         return USUARIO[self.tipo][1]
     
     def is_admin(self):
-        return (self.tipo == 'A')
+        return (self.tipo == 'M')
     def is_medico(self):
         return (self.tipo == 'M')
     def is_limpieza(self):

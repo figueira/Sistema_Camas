@@ -75,10 +75,9 @@ def solicitar_habitacion(request):
                         
             try:
                 newPaciente = Paciente.objects.get(cedula = s_cedula)
-                print newPaciente
                 try:
                     newMedico = Medico.objects.get( codigo = s_codigo_doctor )
-                    print newMedico                    
+                                        
                     if (s_fecha_ingreso <= s_fecha_salida):
                         s = Solicitud(paciente = newPaciente,
                                 medico = newMedico,
@@ -149,7 +148,6 @@ def solicitar_paciente_nuevo(request):
 
         try:
             newPaciente = Paciente.objects.get(cedula = s_cedula)
-            print "crea un nuevo paciente con cedula ="+cedula
         except ObjectDoesNotExist:
             p = Paciente(
                     num_historia = s_num_historia,
@@ -189,7 +187,7 @@ def solicitar_paciente_nuevo(request):
                 msj_info = "El medico no se encuentra registrado en el sistema."
         except:
             msj_tipo = "error"
-            msj_info = "Ya existe este paciente."
+            msj_info = "Ya existe una solicitud con este paciente."
     
     f = SolicitarHabitacion()
     info = {

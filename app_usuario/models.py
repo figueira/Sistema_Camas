@@ -10,7 +10,7 @@ USUARIO = (
 )
 
 USUARIO_OPTIONAL = (
-    (None,'Seleccione...'),
+    ('','Seleccione...'),
     ('A','Administracion'),
     ('R','Responsable'),
     ('M','Medico'),

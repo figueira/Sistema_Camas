@@ -1,4 +1,5 @@
 import json
+import itertools
 
 # -*- encoding: utf-8 -*-
 # Manejo de Sesion
@@ -8,6 +9,7 @@ from django.contrib.auth.decorators import login_required
 # Formularios
 from django.core.context_processors import csrf
 from django.core import serializers
+from django.db.models import Q
 from django.template import RequestContext
 from django.forms.widgets import CheckboxSelectMultiple
 
@@ -220,37 +222,40 @@ def usuario_buscar(request):
 	if request.POST:
 		form = buscarUsuarioForm(request.POST)
 		if form.is_valid():
-			
-			rows = ""
-			pcd = form.cleaned_data 
-			cedula = pcd['cedula'] if pcd['cedula'] !=None else ""
-			nombres = pcd['nombres'] if pcd['nombres'] !=None else ""
-			apellidos = pcd['apellidos'] if pcd['apellidos'] !=None else ""
-			tipo = pcd['tipo']
+			pcd = form.cleaned_data
+			values = [pcd['nombres'], pcd['apellidos'], pcd['cedula'], pcd['tipo'], pcd['habilitado']]
+			fields = ["first_name", "last_name", "username", "tipo", "is_active"]
 
-			if (cedula != None or nombres or None or apellidos or None or tipo != None):
-				if tipo != None:
-					users = Usuario.objects.filter(first_name__icontains=nombres, last_name__icontains=apellidos, tipo=tipo, username__icontains=cedula)
-				else:
-					users = Usuario.objects.filter(first_name__icontains=nombres, last_name__icontains=apellidos, username__icontains=cedula)
+			Qr = None
+			for v,f in itertools.izip(values, fields):
+				if (v != "" and v!= None):
+					if (f == "username"):
+						q = Q(**{"%s__exact" % f : v })
+					elif (f == "tipo" or f == "habilitado"):
+						q = Q(**{"%s" % f : v })
+					else:
+						q = Q(**{"%s__icontains" % f : v })
+					
+					if Qr:
+						Qr = Qr & q
+					else:
+						Qr = q 
+			if Qr:
+				users = Usuario.objects.filter(Qr)
 			else:
 				users = Usuario.objects.order_by('-username')
-
-			# Only executed with jQuery form request
-			if request.is_ajax():
-				info = crear_respuesta_buscar(users)
-				return HttpResponse(info)
-			else:
-				return HttpResponse('La peticion no es valida')
+			
+			info = crear_respuesta_buscar(users)
+			return HttpResponse(info)
 	else:
-		return HttpResponse('BAD BOY')
+		return HttpResponse('Error')
 
 
 @login_required(login_url='/')
-def usuario_examinar(request,cedulaU):
-    #usuario = get_object_or_404(Usuario,cedula=cedulaU)
-    info = {'usuario':usuario}
-    return render_to_response('usuarioExaminar.html',info)
+def usuario_eliminar(request, cedulaU):
+	element = Usuario.objects.get(username=cedulaU)
+	element.delete()
+	return redirect('/usuario/listar')
 
 
 
@@ -260,7 +265,7 @@ def crear_respuesta_buscar(users):
 	data = ""
 	for info in users:
 		data += "<tr>"
-		data+= ini + info.username + fin + ini + info.first_name + info.last_name + fin + ini + info.tipoR() + fin
+		data+= ini + info.username + fin + ini + info.first_name + " " + info.last_name + fin + ini + info.tipoR() + fin
 		if info.is_active:
 			data += ini + "<input type=\"checkbox\" checked>" + fin
 		else:

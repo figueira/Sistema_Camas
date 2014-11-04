@@ -136,7 +136,7 @@ def usuario_crear(request):
 					  if u_administrador == True:
 						  u.is_staff = True
 					  u.save() 	
-					  return redirect('/')
+					  return redirect('/usuario/listar')
 					else:
 						msj_info = "No hubo coincidencia con los emails ingresados."     
 				else:
@@ -156,7 +156,9 @@ def usuario_crear(request):
 @login_required(login_url='/')
 def usuario_listar(request):
 	listaU = Usuario.objects.order_by('-username')
-	form = buscarUsuarioForm()
+	form = buscarUsuarioForm( initial={
+		'habilitado': True
+	})
 	info = { 'listaU':listaU, 'form':form }
 	return render_to_response('lista_usuarios.html',info,context_instance=RequestContext(request))
 
@@ -225,10 +227,11 @@ def usuario_buscar(request):
 			pcd = form.cleaned_data
 			values = [pcd['nombres'], pcd['apellidos'], pcd['cedula'], pcd['tipo'], pcd['habilitado']]
 			fields = ["first_name", "last_name", "username", "tipo", "is_active"]
-
 			Qr = None
+
 			for v,f in itertools.izip(values, fields):
 				if (v != "" and v!= None):
+
 					if (f == "username"):
 						q = Q(**{"%s__exact" % f : v })
 					elif (f == "tipo" or f == "habilitado"):
@@ -244,11 +247,20 @@ def usuario_buscar(request):
 				users = Usuario.objects.filter(Qr)
 			else:
 				users = Usuario.objects.order_by('-username')
-			
-			info = crear_respuesta_buscar(users)
-			return HttpResponse(info)
-	else:
-		return HttpResponse('Error')
+				
+			formSearch = buscarUsuarioForm( initial={
+				'habilitado': True
+			})
+
+			if len(users) > 0:
+				info = { 'listaU':users, 'form':formSearch }
+
+			else:
+				msj_info = "Ningun usuario conincide con los criterios de busqueda."
+				msj_tipo = "info"
+				info = { 'listaU':users, 'form':formSearch, 'msj_tipo':msj_tipo, 'msj_info':msj_info}
+
+			return render_to_response('lista_usuarios.html',info,context_instance=RequestContext(request))
 
 
 @login_required(login_url='/')
@@ -258,30 +270,20 @@ def usuario_eliminar(request, cedulaU):
 	return redirect('/usuario/listar')
 
 
-
-def crear_respuesta_buscar(users):
-	ini = "<td>"
-	fin = "</td>"
-	data = ""
-	for info in users:
-		data += "<tr>"
-		data+= ini + info.username + fin + ini + info.first_name + " " + info.last_name + fin + ini + info.tipoR() + fin
-		if info.is_active:
-			data += ini + "<input type=\"checkbox\" checked>" + fin
-		else:
-			data += ini + "<input type=\"checkbox\">" + fin
-		data += ini 
-		data += "<a href=\"/usuario/listar/" + info.username + "/editar\" class= \"table-link\">"
-		data += "<span class=\"glyphicon glyphicon-pencil\"></span>&nbsp;&nbsp;" 
-		data += "</a>"
-		data += "<a href=\"/usuario/listar/" + info.username + "/borrar\" class= \"table-link\">"
-		data += "<span class=\"glyphicon glyphicon-trash\"></span>&nbsp;&nbsp;" 
-		data += "</a>"
-		data += fin
-		data += "</tr>"
-	return data
+@login_required(login_url='/')
+def usuario_habilitar(request,cedulaU):
+	usuario = Usuario.objects.get(username=cedulaU)
+	usuario.is_active = True
+	usuario.save()
+	return redirect("/usuario/listar")
 
 
+@login_required(login_url='/')
+def usuario_deshabilitar(request,cedulaU):
+	usuario = Usuario.objects.get(username=cedulaU)
+	usuario.is_active = False
+	usuario.save()
+	return redirect("/usuario/listar")
 
 
 
@@ -400,21 +402,6 @@ def clave_cambiar(request):
 
 
 
-
-
-@login_required(login_url='/')
-def usuario_deshabilitar(request,cedulaU):
-	#usuario = get_object_or_404(Usuario,cedula=cedulaU)
-	usuario.is_active = False
-	usuario.save()
-	return redirect("/usuario/listar")
-
-@login_required(login_url='/')
-def usuario_habilitar(request,cedulaU):
-	#usuario = get_object_or_404(Usuario,cedula=cedulaU)
-	usuario.is_active = True
-	usuario.save()
-	return redirect("/usuario/listar")
 
 
 

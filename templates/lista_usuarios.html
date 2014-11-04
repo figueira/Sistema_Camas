@@ -1,29 +1,14 @@
 {% extends "base.html" %}
 
 {% block scripts %}
-
-	<script src="{{ STATIC_URL }}libs/jquery/js/jquery.form.min.js"></script>
 	<script>
 
 		function show_form() {
 			$('#form-buscar').fadeToggle();
 		}
-	
-		// prepare Options Object for plugin
-        var options = {
-            success: function(data) {
-				$('#table-user-body').html(data);
-            },
-            error:  function(resp) {
-                console.log("Fallo");
-            }
-        };
-        
-
 
 		$(document).ready( function() {
 			$("#show-form-link").click(show_form);
-			$('#form-buscar').ajaxForm(options);
 		});
 
 	</script>
@@ -112,15 +97,13 @@
 							<td>
 								{{l.tipoR}}
 							</td>
-
-							{% if l.is_active != True %}
-							<td> <input type="checkbox"> </td>
-
-							{% else %}
-							<td> <input type="checkbox" checked> </td>
-
-							{% endif %}
-
+							<td>
+								{% if l.is_active != True %}
+									<input id="{{l.username}}" type="checkbox" disabled>
+								{% else %}
+									<input id="{{l.username}}" type="checkbox" checked disabled> 
+								{% endif %}
+							</td>
 							<td>
 								<a href="/usuario/listar/{{l.username}}/editar" class= "table-link">
 									<span class="glyphicon glyphicon-pencil"></span>&nbsp;&nbsp; 
@@ -128,6 +111,16 @@
 								<a href="/usuario/listar/{{l.username}}/borrar" class= "table-link">
 									<span class="glyphicon glyphicon-trash"></span>&nbsp;&nbsp;
 								</a>
+								
+								{% if l.is_active != True %}
+									<a href="/usuario/listar/{{l.username}}/habilitar" class= "table-link">
+										<span>Habilitar</span>
+									</a> 
+								{% else %}
+									<a href="/usuario/listar/{{l.username}}/deshabilitar" class= "table-link">
+										<span>Deshabilitar</span>
+									</a>
+								{% endif %}
 							</td>
 						</tr>
 						{% endfor %}

@@ -22,7 +22,7 @@ urlpatterns = patterns('app_usuario.views',
     url('^usuario/listar$','usuario_listar'),
     url('^usuario/listar/buscar$','usuario_buscar'),
     url('^usuario/listar/(?P<cedulaU>\d+)/habilitar$', 'usuario_habilitar'),
-    url('^usuario/listar/(?P<cedulaU>\d+)/deshabilitar$','usuario_deshabilitar'),
+    url('^usuario/listar/(?P<cedulaU>\d+)/deshabilitar$', 'usuario_deshabilitar'),
     url('^usuario/listar/(?P<username>\d+)/editar$', 'usuario_editar'),
     url('^usuario/listar/(?P<cedulaU>\d+)/borrar$', 'usuario_eliminar'),
 )

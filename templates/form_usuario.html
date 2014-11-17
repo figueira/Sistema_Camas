@@ -10,6 +10,19 @@
 
 		$(document).ready( function() {
 			$("#cambiar_clave_checkbox").change(cambiar_clave_form);
+
+			$( "#form-type-user").change(function() {
+				if($(this).val() == 'M'){
+					$("#codigoMedicoForm").fadeIn();
+				}
+				else {
+					$("#codigoMedicoForm").fadeOut();
+				}
+			});
+
+			if($( "#form-type-user").val() == 'M') {
+				$("#codigoMedicoForm").fadeIn();
+			}
 		});
 
 	</script>
@@ -23,9 +36,9 @@
 	{% endif %}
 
 	{% if usuario %}
-		<form method="post" action="/usuario/listar/{{usuario.username}}/editar">
+	<form method="post" action="/usuario/listar/{{usuario.username}}/editar">
 	{% else %}
-		<form method="post" action="/usuario/crear">
+	<form method="post" action="/usuario/crear">
 	{% endif %}		
 		<div class="row">
 
@@ -164,6 +177,31 @@
 			</div>
 		
 		</div>
+
+		<div id="codigoMedicoForm" class="row" style="display: none">
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+
+					<br>
+
+					<span class="msj-error">
+						{{form.codigoMedico.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-barcode"></span>
+						</span>
+						{{form.codigoMedico}}
+					</div>
+
+					<br>
+
+				</div>
+			</div>
+
+		</div>
+
 
 		{% if usuario %}
 

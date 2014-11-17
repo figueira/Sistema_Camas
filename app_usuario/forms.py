@@ -47,6 +47,7 @@ class BaseUserForm(forms.Form):
 						choices = USUARIO,
 						widget=forms.Select(
 							attrs={
+								'id':'form-type-user',
 								'class':'form-control'
 							}
 						)
@@ -73,7 +74,15 @@ class BaseUserForm(forms.Form):
 
 
 class SolicitarCuenta(BaseUserForm):
-	
+	codigoMedico	= forms.CharField(
+						required = False,
+						widget=forms.NumberInput(
+							attrs = {
+								'placeholder': 'Codigo del Medico',
+								'class': 'form-control'
+							}
+						)
+					)
 	clave           = forms.CharField(
 						widget = forms.PasswordInput(
 							attrs = {

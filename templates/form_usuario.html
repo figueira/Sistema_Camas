@@ -27,6 +27,21 @@
 
 	</script>
 
+	{% if usuario %}
+		<script>
+			$(document).ready( function() 
+			{
+				if($( "#form-type-user").val() == 'M') {
+					$( "#form-type-user").prop('disabled', 'disabled');
+				}
+
+				$("#editUserForm").bind('submit', function() {
+					$( "#form-type-user").removeAttr('disabled');
+				});
+			});
+		</script>
+	{% endif %}
+
 {% endblock %} 
 
 {% block body %}
@@ -36,7 +51,7 @@
 	{% endif %}
 
 	{% if usuario %}
-	<form method="post" action="/usuario/listar/{{usuario.username}}/editar">
+	<form id= "editUserForm" method="post" action="/usuario/listar/{{usuario.username}}/editar">
 	{% else %}
 	<form method="post" action="/usuario/crear">
 	{% endif %}		

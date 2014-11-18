@@ -188,55 +188,90 @@ def usuario_listar(request):
 
 @login_required(login_url='/')
 def usuario_editar(request, username):
-	usuario= Usuario.objects.get(username=username)
+	usuario = Usuario.objects.get(username=username)
+
+	if (usuario.tipo == 'M') :
+		usuario = Medico.objects.get(username=username)
 
 	if request.method == 'POST':
 		form = EditarCuenta(request.POST)
 		if form.is_valid():
 			pcd = form.cleaned_data
 
-			if pcd['email'] == pcd['email0']:
-				u_cambiarClave		= pcd['cambiarClave']
-				u_clave_actual		= pcd['clave']
-				u_clave_nueva		= pcd['claveNueva']
-				u_clave_nueva0		= pcd['claveNueva0']
-				usuario.username	= pcd['cedula']
-				usuario.first_name	= pcd['nombres']
-				usuario.last_name	= pcd['apellidos']
-				usuario.tipo		= pcd['tipo']
-				usuario.email		= pcd['email']
-				usuario.is_staff	= pcd['administrador']
+			if username.strip() == str(pcd['cedula']).strip() :
+				validacion = True	
+			else :
+				prueba = Usuario.objects.filter(username=pcd['cedula'])
+				if not prueba:
+					validacion = True
+				else : 
+					validacion = False
 
-				if u_cambiarClave:
-					if usuario.check_password(u_clave_actual):
-						if (u_clave_nueva == u_clave_nueva0):
-							usuario.set_password(u_clave_nueva)
+			if validacion:
+				if pcd['email'] == pcd['email0']:
+					u_cambiarClave		= pcd['cambiarClave']
+					u_clave_actual		= pcd['clave']
+					u_clave_nueva		= pcd['claveNueva']
+					u_clave_nueva0		= pcd['claveNueva0']
+					usuario.username	= pcd['cedula']
+					usuario.first_name	= pcd['nombres']
+					usuario.last_name	= pcd['apellidos']
+					usuario.email		= pcd['email']
+					usuario.is_staff	= pcd['administrador']
+					usuario.tipo		= pcd['tipo']
+
+					if usuario.tipo == 'M' and pcd['codigoMedico'] == '' :
+						msj_info = "Para el tipo de usuario 'Medico' el campo 'Codigo del medico' es requerido."
+
+					else :
+						if usuario.tipo == 'M' :
+							usuario.codigo = pcd['codigoMedico']
+
+						if u_cambiarClave:
+							if usuario.check_password(u_clave_actual):
+								if (u_clave_nueva == u_clave_nueva0):
+									usuario.set_password(u_clave_nueva)
+									usuario.save()
+									return redirect("/usuario/listar")
+								else:
+									msj_info = "No hubo coincidencia con las claves nuevas ingresadas."
+							else:
+								msj_info = "La clave actual no es la correcta."  
+						else:
 							usuario.save()
 							return redirect("/usuario/listar")
-						else:
-							msj_info = "No hubo coincidencia con las claves nuevas ingresadas."
-					else:
-						msj_info = "La clave actual no es la correcta."  
 				else:
-					usuario.save()
-					return redirect("/usuario/listar")
-			else:
-				msj_info = "No hubo coincidencia con los emails ingresados."  
+					msj_info = "No hubo coincidencia con los emails ingresados."  
+			else :
+				msj_info = "Ya hay un usuario registrado con esa cedula."
 		else:
 			msj_info = "Error con el formulario."
-			msj_tipo = "danger"
-			info = {'usuario':usuario, 'msj_tipo':msj_tipo, 'msj_info':msj_info, 'form':form}
+		
+		msj_tipo = "danger"
+		info = {'usuario':usuario, 'msj_tipo':msj_tipo, 'msj_info':msj_info, 'form':form}
 		return render_to_response('form_usuario.html',info,context_instance=RequestContext(request))
 
-	form = EditarCuenta( initial={
-		'cedula': usuario.username,
-		'nombres': usuario.first_name,
-		'apellidos': usuario.last_name,
-		'email': usuario.email,
-		'email0': usuario.email,
-		'tipo': usuario.tipo,
-		'administrador': usuario.is_staff
-	})
+	if (usuario.tipo == 'M') :
+		form = EditarCuenta( initial={
+			'cedula': usuario.username,
+			'nombres': usuario.first_name,
+			'apellidos': usuario.last_name,
+			'email': usuario.email,
+			'email0': usuario.email,
+			'tipo': usuario.tipo,
+			'administrador': usuario.is_staff,
+			'codigoMedico' : usuario.codigo
+		})
+	else :
+		form = EditarCuenta( initial={
+			'cedula': usuario.username,
+			'nombres': usuario.first_name,
+			'apellidos': usuario.last_name,
+			'email': usuario.email,
+			'email0': usuario.email,
+			'tipo': usuario.tipo,
+			'administrador': usuario.is_staff
+		})
 
 	info = { 'usuario':usuario, 'form':form }
 	return render_to_response('form_usuario.html',info,context_instance=RequestContext(request))

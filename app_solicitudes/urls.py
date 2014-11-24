@@ -8,6 +8,5 @@ urlpatterns = patterns('app_solicitudes.views',
     url('^habitacion/paciente_nuevo$','solicitar_paciente_nuevo'),
     url('^buscar/paciente$','buscar_paciente_cedula'),
     url('^habitacion/listar_solicitudes','lista_solicitudes'),
+    url('^habitacion/cancelar_solicitud$','cancelar_solicitud'),
 )
-
-#url('^habitacion/cancelarSolicitud$','lista_solicitudes'),

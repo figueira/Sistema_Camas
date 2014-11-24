@@ -57,6 +57,7 @@
 
 		function mostrar_form () {
 			$('#form-oculto').fadeToggle();
+			$('#form-completo').hide();
 		}
 
 		function mostrar_paciente( paciente ) {
@@ -73,11 +74,27 @@
 				$('#sexo_paciente').text("Femenino");
 			}
 
-			$('#contacto_paciente').text(paciente.contacto_tlf);
 			$('#form-completo').fadeIn();
 			$('#form-completo').find('input[name=cedula]').val(paciente.cedula);
 		}
 	</script>
+
+	{% if showForm %}
+		<script>
+			$(document).ready(function() {
+				mostrar_form();
+			});
+		</script>
+	{% endif %}
+
+	{% if showForm_second %}
+		<script>
+			$(document).ready(function() {
+				buscar_paciente();
+			});
+		</script>
+	{% endif %}
+
 {% endblock %} 
 
 {% block body %}
@@ -200,7 +217,7 @@
 					<br>
 
 					{% for e in form2 %}
-						{% if e.label == "FECHA ESTIMADA DE INGRESO" %}
+						{% if e.label == "FECHA-INGRESO" %}
 
 							<span class="msj-error">
 								{{e.errors}} {{ mnj_fecha }}
@@ -277,7 +294,7 @@
 					<br>
 
 					{% for e in form2 %}
-						{% if e.label == "FECHA DE NACIMIENTO" %}
+						{% if e.label == "FECHA-NACIMIENTO" %}
 
 							<span class="msj-error">
 								{{e.errors}} {{ mnj_fecha }}
@@ -312,7 +329,7 @@
 					<br>
 
 					{% for e in form2 %}
-						{% if e.label == "FECHA ESTIMADA DE SALIDA" %}
+						{% if e.label == "FECHA-SALIDA" %}
 
 							<span class="msj-error">
 								{{e.errors}} {{ mnj_fecha }}
@@ -360,103 +377,148 @@
 		</div>
 	</form>
 
-	<div class="cuadroGrande span5">
+
+	<form id="form-completo" class= "tablaAgregar" method="post" action="/habitacion/solicitar" style="display: none">
 		
-		<form id="form-completo" class= "tablaAgregar" method="post" action="/habitacion/solicitar" style="display: none">
-			<div class="grid-container text-center">
-				Formulario de Solicitud de Habitaci&oacute;n
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container text-center">
+					<h5>Paciente<h5>
+				</div>
 			</div>
-			<br>
+		</div>
 
-			{% csrf_token %}
-			
+		<div id="muestra_paciente"  class="row" style="display: none;">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container">
+
+					<div class="row">
+						<div class="col-xs-4 col-sm-4 col-md-3 col-lg-3">
+							<div class="grid-container text-center">
+								<img class="hc-pic" src="/static/img/person.gif">
+							</div>
+						</div>
+
+						<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+							<div class="grid-container">
+								<table id="tabla_busqueda_paciente" class="table table-bordered">
+									<tr>
+										<td><b>C&eacute;dula:</b></td>
+										<td id="cedula_paciente"></td>
+									</tr>
+									<tr>
+										<td><b>Nombres:</b></td>
+										<td id="nombres_paciente"></td>
+									</tr>
+									<tr>
+										<td><b>Apellidos:</b></td>
+										<td id="apellidos_paciente"></td>
+									</tr>
+									<tr>
+										<td><b>Sexo:</b></td>
+										<td id="sexo_paciente"></td>
+									</tr>
+									<tr>
+										<td><b>Fecha de Ingreso a la institucion:</b></td>
+										<td>Hoy</td>
+									</tr>
+								</table>
+							</div>
+						</div>
+
+					</div>			
+				</div>
+			</div>
+		</div>
+
+		{% csrf_token %}
+		
+		<div class="row">
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
-			<div class="grid-container">
-			
-				<br>
-				{{form.cedula.as_hidden}}
-					<span class="msj-error">
-						{{form.codigo_doctor.errors}}
-					</span>
-					<div class="input-group">
-						<span class="input-group-addon">
-							<span class="glyphicon glyphicon-barcode"></span>
-						</span>
-						{{form.codigo_doctor}}
-					</div>
-											
+				<div class="grid-container">
+				
 					<br>
-					
-					{% for e in form %}
-						{% if e.label == "FECHA ESTIMADA DE INGRESO" %}
-							<span class="msj-error">
-								{{e.errors}} {{ mnj_fecha }}
+					{{form.cedula.as_hidden}}
+						<span class="msj-error">
+							{{form.codigo_doctor.errors}}
+						</span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-barcode"></span>
 							</span>
-							<div class="input-group">
-								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar"></span>
-								</span>
-								<div id="ingreso_picker" class="input-append">
-									{{e}}
-									<span  class="add-on">
-										<i data-time-icon="icon-time" data-date-icon="icon-calendar"> 
-										</i>
-									</span>
-								</div>
-							</div>
-
-						{% endif %}
-					{% endfor %}
+							{{form.codigo_doctor}}
+						</div>
+												
 						<br>
-					{% for e in form %}	
-						{% if e.label == "FECHA ESTIMADA DE SALIDA" %}
-
-							<span class="msj-error">
-								{{e.errors}} {{ mnj_fecha }}
-							</span>
-							<div class="input-group">
-								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar"></span>
-								</span>
-								<div id="ingreso_picker" class="input-append">
-									{{e}}
-									<span  class="add-on">
-										<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
-									</span>
-								</div>
-							</div>
-
-						{% endif %}
-					{% endfor %}
-					
-					<br>
-					
-					<span class="msj-error">
-						{{form.procedencia.errors}} 
-					</span>
-					<div class="input-group">
-						<span class="input-group-addon">
-							<span class="glyphicon glyphicon-transfer"></span>
-						</span>
-						{{form.procedencia}}
-					</div>
 						
-					<br>
-					
-					<span class="msj-error">
-						{{form.correo_solicitante.errors}}
-					</span>
-					<div class="input-group">
-						<span class="input-group-addon">
-							<span class="glyphicon glyphicon-envelope"></span>
+						{% for e in form %}
+							{% if e.label == "FECHA-INGRESO-2" %}
+								<span class="msj-error">
+									{{e.errors}} {{ mnj_fecha }}
+								</span>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+									<div id="ingreso_picker" class="input-append">
+										{{e}}
+										<span  class="add-on">
+											<i data-time-icon="icon-time" data-date-icon="icon-calendar"> 
+											</i>
+										</span>
+									</div>
+								</div>
+
+							{% endif %}
+						{% endfor %}
+							<br>
+						{% for e in form %}	
+							{% if e.label == "FECHA-SALIDA-2" %}
+
+								<span class="msj-error">
+									{{e.errors}} {{ mnj_fecha }}
+								</span>
+								<div class="input-group">
+									<span class="input-group-addon">
+										<span class="glyphicon glyphicon-calendar"></span>
+									</span>
+									<div id="ingreso_picker" class="input-append">
+										{{e}}
+										<span  class="add-on">
+											<i data-time-icon="icon-time" data-date-icon="icon-calendar"> </i>
+										</span>
+									</div>
+								</div>
+
+							{% endif %}
+						{% endfor %}
+						
+						<br>
+						
+						<span class="msj-error">
+							{{form.procedencia.errors}} 
 						</span>
-						{{form.correo_solicitante}}
-					</div>
-					
-					
-			
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-transfer"></span>
+							</span>
+							{{form.procedencia}}
+						</div>
+							
+						<br>
+						
+						<span class="msj-error">
+							{{form.correo_solicitante.errors}}
+						</span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-envelope"></span>
+							</span>
+							{{form.correo_solicitante}}
+						</div>
+				</div>
 			</div>
-			</div>
+		
 			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
 				<div class="grid-container">
 					<br>
@@ -485,61 +547,20 @@
 					
 				</div>
 			</div>
-			<div class="row">
-				<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-					<div class="grid-container clearfix">
-						<div class="pull-right">
-							<input class="btn btn-primary pull-right" type="submit" value="Solicitar Habitaci&oacute;n" />
-						</div>
-				
+		</div>
+
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container clearfix">
+					<div class="pull-right">
+						<input class="btn btn-primary pull-right" type="submit" value="Solicitar Habitaci&oacute;n" />
 					</div>
 				</div>
 			</div>
-			
-		</form>
-
-		<br>
 		</div>
 		
+	</form>
 
-	</div>
-
-	<div id="muestra_paciente" class="hc-preview span6" style="display: none;">
-		<div class="hc-details hc-details-open-top" style="width: 100%; background-color: rgb(252, 250, 250); display: block;">
-			<table width="100%" border=0>
-				<td>
-					<img class="hc-pic" src="/static/img/person.gif">
-				</td>
-				<td>
-					<table class="hc-table">
-						<tr>
-							<td><b>C&eacute;dula:</b></td>
-							<td id="cedula_paciente"></td>
-						</tr>
-						<tr>
-							<td><b>Nombres:</b></td>
-							<td id="nombres_paciente"></td>
-						</tr>
-						<tr>
-							<td><b>Apellidos:</b></td>
-							<td id="apellidos_paciente"></td>
-						</tr>
-						<tr>
-							<td><b>Sexo:</b></td>
-							<td id="sexo_paciente"></td>
-						</tr>
-						<tr>
-							<td><b>Fecha de Ingreso a la institucion:</b></td>
-							<td>Hoy</td>
-						</tr>
-						<tr>
-							<td><b>Contacto:</b></td>
-							<td id="contacto_paciente"></td>
-						</tr>
-					</table>
-				</td>
-			</table>
-		</div>
-	</div>
+	<br>
 
 {% endblock %}

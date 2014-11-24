@@ -4,24 +4,29 @@
 	<script>
 		// Funcion para eliminar solicitud
 		function cancelar_sol( item ) {
-		var $objeto = $( item ).parent().parent();
+			var $objeto = $( item ).parent().parent();
 			var id = $objeto.find('input[name=id]').val();
-				$.ajax({
-					url : 'cancelar_solicitud',
-					type : 'POST',
-					dataType: "json",
-					data : {id:id},
-					success : function(json) {
-						if (json.result == 'success') {
-							alert("Solicitud eliminada con exito.");
-						} else {
-							alert("Error: No se pudo eliminar la solicitud.");
-						}
-					},
-					error : function(xhr,errmsg,err) {
+			$.ajax({
+				url : 'cancelar_solicitud',
+				type : 'POST',
+				dataType: "json",
+				data : {
+					csrfmiddlewaretoken: $("#table-user > input").val(),
+					id:id
+				},
+				success : function(json) {
+					if (json.result == 'success') {
+						alert("Solicitud eliminada con exito.");
+						$objeto.remove();
+					} 
+					else {
 						alert("Error: No se pudo eliminar la solicitud.");
 					}
-		});
+				},
+				error : function(xhr,errmsg,err) {
+					alert("Error: No se pudo eliminar la solicitud.");
+				}
+			});
 		}
 	</script>
 {% endblock %}  
@@ -60,6 +65,7 @@
 					<br>
 					
 					<table id="table-user" class="table table-bordered table-striped">
+						{% csrf_token %}
 						<thead>
 							<tr>
 								<th>Nombre del paciente</th>

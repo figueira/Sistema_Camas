@@ -2,401 +2,441 @@
 
 {% block scripts %}  
   <script>
-    $(function() {
-        $( "li.solicitud_item" ).draggable({ // Hacer draggable todos los pacientes
-            revert: "invalid",
-            helper: "clone"
-        });
-        
-        $( "tr.habitacion" ).droppable({ // Hacer droppable la tabla
-            hoverClass: "habitacion-activa",
-            drop: function( event, ui ) {
-                var $item = ui.draggable; // item es el paciente arrastrado
-                                        // this es la tabla
-                var id = $( this ).find('input[name=id]').val();
-                $( this ).find('input[name=form-'+id+'-nombre]').val($item.find('input[name=nombres]').val())
-                $( this ).find('input[name=form-'+id+'-numero_historia]').val($item.find('input[name=num_historia]').val())
-                $( this ).find('input[name=form-'+id+'-procedencia]').val($item.find('input[name=procedencia]').val())
-                $( this ).find('input[name=form-'+id+'-fecha]').val($item.find('input[name=fecha_salida]').val())
-                $( this ).find('input[name=form-'+id+'-nombre_medico]').val($item.find('input[name=medico]').val())
-                $( this ).find('img').attr("src", "/static/img/delete_en.png")
-                $( this ).find('a').attr("onclick", "deshacer(this);").attr("href", "#");
-                ui.draggable.fadeOut();
-            }
-        });
+	$(function() {
+		$( "li.solicitud_item" ).draggable({ // Hacer draggable todos los pacientes
+			revert: "invalid",
+			helper: "clone"
+		});
+		
+		$( "tr.habitacion" ).droppable({ // Hacer droppable la tabla
+			hoverClass: "habitacion-activa",
+			drop: function( event, ui ) {
+				var $item = ui.draggable; // item es el paciente arrastrado
+										// this es la tabla
+				var id = $( this ).find('input[name=id]').val();
+				$( this ).find('input[name=form-'+id+'-nombre]').val($item.find('input[name=nombres]').val())
+				$( this ).find('input[name=form-'+id+'-numero_historia]').val($item.find('input[name=num_historia]').val())
+				$( this ).find('input[name=form-'+id+'-procedencia]').val($item.find('input[name=procedencia]').val())
+				$( this ).find('input[name=form-'+id+'-fecha]').val($item.find('input[name=fecha_salida]').val())
+				$( this ).find('input[name=form-'+id+'-nombre_medico]').val($item.find('input[name=medico]').val())
+				$( this ).find('img').attr("src", "/static/img/delete_en.png")
+				$( this ).find('a').attr("onclick", "deshacer(this);").attr("href", "#");
+				ui.draggable.fadeOut();
+			}
+		});
 
-        $(document).ajaxSend(function(event, xhr, settings) {
-            function getCookie(name) {
-                var cookieValue = null;
-                if (document.cookie && document.cookie != '') {
-                    var cookies = document.cookie.split(';');
-                    for (var i = 0; i < cookies.length; i++) {
-                        var cookie = jQuery.trim(cookies[i]);
-                        // Does this cookie string begin with the name we want?
-                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                            break;
-                        }
-                    }
-                }
-                return cookieValue;
-            }
-            
-            function sameOrigin(url) {
-                // url could be relative or scheme relative or absolute
-                var host = document.location.host; // host + port
-                var protocol = document.location.protocol;
-                var sr_origin = '//' + host;
-                var origin = protocol + sr_origin;
-                // Allow absolute or scheme relative URLs to same origin
-                return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
-                    (url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
-                    // or any other URL that isn't scheme relative or absolute i.e relative.
-                    !(/^(\/\/|http:|https:).*/.test(url));
-            }
-            
-            function safeMethod(method) {
-                return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-            }
+		$(document).ajaxSend(function(event, xhr, settings) {
+			function getCookie(name) {
+				var cookieValue = null;
+				if (document.cookie && document.cookie != '') {
+					var cookies = document.cookie.split(';');
+					for (var i = 0; i < cookies.length; i++) {
+						var cookie = jQuery.trim(cookies[i]);
+						// Does this cookie string begin with the name we want?
+						if (cookie.substring(0, name.length + 1) == (name + '=')) {
+							cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+							break;
+						}
+					}
+				}
+				return cookieValue;
+			}
+			
+			function sameOrigin(url) {
+				// url could be relative or scheme relative or absolute
+				var host = document.location.host; // host + port
+				var protocol = document.location.protocol;
+				var sr_origin = '//' + host;
+				var origin = protocol + sr_origin;
+				// Allow absolute or scheme relative URLs to same origin
+				return (url == origin || url.slice(0, origin.length + 1) == origin + '/') ||
+					(url == sr_origin || url.slice(0, sr_origin.length + 1) == sr_origin + '/') ||
+					// or any other URL that isn't scheme relative or absolute i.e relative.
+					!(/^(\/\/|http:|https:).*/.test(url));
+			}
+			
+			function safeMethod(method) {
+				return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+			}
 
-            if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
-                xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-            }
-        
-        });
-            
-        $( ".papelera" ).droppable({
-          drop: function( event, ui ) {
-            var item = ui.draggable;
-            if (confirm("Esta seguro de que desea eliminar esta solicitud")) {
-                var objeto = $(item).find('input[name=num_historia]').val();
-                $.ajax({
-                    url : 'eliminarSolicitud',
-                    type : 'POST',
-                    dataType: "json",
-                    data : {num_historia:objeto},
-                    success : function(json) {
-                        if (json.result == 'success') {
-                            alert("Solicitud eliminada con exito.");
-                            ui.draggable.fadeOut();
-                        } else {
-                            alert("Error: No se pudo eliminar la solicitud.");
-                        }
-                    },
-                    error : function(xhr,errmsg,err) {
-            
-                        alert("Error: No se pudo eliminar la solicitud.");
-                    }
-                
-                });
-            } 
-          }
-        });
-    });
-    
-    $(function() { // Acordeon que no cierra automaticamente
-        $.fn.togglepanels = function(){
-            return this.each(function(){
-                $(this).addClass("ui-accordion ui-accordion-icons ui-widget ui-helper-reset")
-                    .find("h3")
-                    .addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
-                    .hover(function() { $(this).toggleClass("ui-state-hover"); })
-                    .click(function() {
-                        $(this)
-                            .toggleClass("ui-accordion-header-active ui-state-active ui-state-default ui-corner-bottom")
-                            .find("> .ui-icon").toggleClass("ui-icon-triangle-1-e ui-icon-triangle-1-s").end()
-                            .next().slideToggle();
-                            return false;
-                    })
-                    .next()
-                    .addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom")
-                    .hide();
-            });
-        };
+			if (!safeMethod(settings.type) && sameOrigin(settings.url)) {
+				xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+			}
+		
+		});
+			
+		$( ".papelera" ).droppable({
+		  drop: function( event, ui ) {
+			var item = ui.draggable;
+			if (confirm("Esta seguro de que desea eliminar esta solicitud")) {
+				var objeto = $(item).find('input[name=num_historia]').val();
+				$.ajax({
+					url : 'eliminarSolicitud',
+					type : 'POST',
+					dataType: "json",
+					data : {num_historia:objeto},
+					success : function(json) {
+						if (json.result == 'success') {
+							alert("Solicitud eliminada con exito.");
+							ui.draggable.fadeOut();
+						} else {
+							alert("Error: No se pudo eliminar la solicitud.");
+						}
+					},
+					error : function(xhr,errmsg,err) {
+			
+						alert("Error: No se pudo eliminar la solicitud.");
+					}
+				
+				});
+			} 
+		  }
+		});
+	});
+	
+	$(function() { // Acordeon que no cierra automaticamente
+		$.fn.togglepanels = function(){
+			return this.each(function(){
+				$(this).addClass("ui-accordion ui-accordion-icons ui-widget ui-helper-reset")
+					.find("h3")
+					.addClass("ui-accordion-header ui-helper-reset ui-state-default ui-corner-top ui-corner-bottom")
+					.hover(function() { $(this).toggleClass("ui-state-hover"); })
+					.click(function() {
+						$(this)
+							.toggleClass("ui-accordion-header-active ui-state-active ui-state-default ui-corner-bottom")
+							.find("> .ui-icon").toggleClass("ui-icon-triangle-1-e ui-icon-triangle-1-s").end()
+							.next().slideToggle();
+							return false;
+					})
+					.next()
+					.addClass("ui-accordion-content ui-helper-reset ui-widget-content ui-corner-bottom")
+					.hide();
+			});
+		};
 
-        $("#notaccordion").togglepanels();
-    });
-    
-    // Funcion para devolver el paciente
-    function deshacer( item ) {
-        var $objeto = $( item ).parent().parent();
-        var id = $objeto.find('input[name=id]').val();    
-        var num_historia = $objeto.find('input[name=form-'+id+'-numero_historia]').val();
-        $objeto.find("input").val('');
-        $objeto.find('input[name=id]').val(id);
-        $objeto.find('img').attr("src", "/static/img/delete_dis.png");
-        $objeto.find('a').removeAttr("onclick").removeAttr("href");
-        $('#'+num_historia+'').fadeIn(1000);
-    };
+		$("#notaccordion").togglepanels();
+	});
+	
+	// Funcion para devolver el paciente
+	function deshacer( item ) {
+		var $objeto = $( item ).parent().parent();
+		var id = $objeto.find('input[name=id]').val();    
+		var num_historia = $objeto.find('input[name=form-'+id+'-numero_historia]').val();
+		$objeto.find("input").val('');
+		$objeto.find('input[name=id]').val(id);
+		$objeto.find('img').attr("src", "/static/img/delete_dis.png");
+		$objeto.find('a').removeAttr("onclick").removeAttr("href");
+		$('#'+num_historia+'').fadeIn(1000);
+	};
   </script>
 {% endblock %}  
   
 {% block body %}  
-  <div class="row">
 
-  
-    <!--   Lista de habitaciones    -->
-    <div class="cuadroGrande span8 centrar" style="margin-left: 10px">
-	  {% if asignados %}	
-		  <div class="{% if error %}habitacion_error{% else %}habitacion_info{% endif %}">
-			{{ asignados }}
-		  </div>
-	  {% endif %}
-      <div class="titulo">
-        Asignaci&oacute;n de Camas
-      </div>
-      <br/>
-      <p>Se muestran las habitaciones libres para asignar pacientes.</p>
-      <p>Arrastre el paciente de las listas de la derecha hasta la habitaci&oacute;n que desea asignarle.</p>
-      {% if formset.total_form_count > 0 %}
-	  <form method="post" action="">
-		<table class="table table-bordered">
-		<tr>
-			<td><input class="btn btn-primary" type="submit" value="Asignar habitaciones" /></td>
-		</tr>
-        <tr>
-            <th>N&uacute;mero de Habitaci&oacute;n</th>
-            <th>N&uacute;mero de Historia</th>
-            <th>Paciente</th>
-            <th style="display:none;">M&eacute;dico</th>
-            <th>Fecha estimada de salida</th>
-            <th>Procedencia</th>
-            <td></td>
-        </tr>
-		
-			{% csrf_token %}
-			{{ formset.management_form }}
-			{% for form in formset %}
-			{% if form.numero_habitacion.value %}
-			<tr class="habitacion">
-				<input type="hidden" name="id" value="{{ forloop.counter0 }}" />
-				<td style="font-size:200%; vertical-align:middle;">
-                    {{form.numero_habitacion.as_hidden }}
-					<center>{{form.numero_habitacion.value }}</center>
-				</td>
-				<td>
-					<center>{{form.numero_historia}}</center>
-				</td>
-				<td>
-					{{form.nombre}}
-				</td>
-				<td style="display:none;">
-					{{form.nombre_medico}}
-				</td>
-				<td>
-					{{form.fecha}}
-				</td>
-				<td>
-					{{form.procedencia}}
-				</td>
-				<td>
-                    <a><img src="/static/img/delete_dis.png" /></a>
-				</td>
-			</tr>
-			{% endif %}
-			{% endfor %}
-      </table>
-	</form>
-      {% else %}
-      <h4>No hay habitaciones disponibles en este momento.</h4>
-      {% endif %}
-    </div>
-    
-    
-    
-    
-    
-    
-    <!--  Lista de Pacientes    -->
-    <div class="cuadroGrande span4 centrar" style="margin-left: 50px">
-	
-	<div>
-		<div style="width:58%; float:left">
-			<h4>Solicitudes de camas</h4>
-		</div>
-		<div style="width:42%; float:right">
-			<div style="padding-top:10px;padding-bottom:10px;padding-left:42px;padding-right:42px;float:right" class="papelera"> 
-				<img width="48px" height="42px" src="/static/img/papelera.png" /> 
-			</div> 
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				<h4 class="text-center">
+					Asignaci&oacute;n de Camas
+				</h4>
+			</div>
 		</div>
 	</div>
-	
-	<div style="clear:both"></div>
-	  
-      <div id="notaccordion">
-        <h3><a href="#">Emergencia Adultos</a></h3>
-        <div id="adultos">
-			{% for pac in pac_emergencia_adultos %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-                <b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-                <br>
-                {{pac.diagnostico}}
-                <br>
-                <i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
-                <br>
-                <i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-            </li>
-			{% endfor %}
-        </div>
-        <h3><a href="#">Emergencia Pedi&aacute;trica</a></h3>
-        <div id="pediatra">
-            {% for pac in pac_emergencia_pediatra %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-                <b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-                <br>
-                {{pac.diagnostico}}
-                <br>
-                <i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
-                <br>
-                <i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-            </li>
-			{% endfor %}
-        </div>
-        <h3>Quir&oacute;fano</h3>
-        <div id="quirofano">
-            {% for pac in pac_quirofano %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-				<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-				<br>
-				{{pac.diagnostico}}
-				<br>
-				<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
-				<br>
-				<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-			</li>
-			{% endfor %}
-        </div>
-        <h3>Sala de Partos</h3>
-        <div id="partos">
-            {% for pac in pac_parto %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-                <b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-                <br>
-                {{pac.diagnostico}}
-                <br>
-                <i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
-                <br>
-                <i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-            </li>
-			{% endfor %}
-        </div>
-        <h3>UCI</h3>
-        <div id="uci">
-            {% for pac in pac_uci %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-                <b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-                <br>
-                {{pac.diagnostico}}
-                <br>
-                <i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
-                <br>
-                <i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-            </li>
-			{% endfor %}
-        </div>
-        <h3>Adicionales</h3>
-        <div>
-            {% for pac in pac_adicional %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-                <b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-                <br>
-                {{pac.diagnostico}}
-                <br>
-                <i><b>Salida estimada</b></i>:{{pac.fecha_salida}}
-                <br>
-                <i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-            </li>
-			{% endfor %}
-        </div>
-        <h3>Especiales</h3>
-        <div id="especiales">
-            {% for pac in pac_especial %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-                <b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-                <br>
-                {{pac.diagnostico}}
-                <br>
-                <i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
-                <br>
-                <i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-            </li>
-			{% endfor %}
-        </div>
-		<h3>Traslados</h3>
-        <div id="traslado">
-            {% for pac in pac_traslado %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-                <b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-                <br>
-                {{pac.diagnostico}}
-                <br>
-                <i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
-                <br>
-                <i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-            </li>
-			{% endfor %}
-        </div>
-        <h3>Otros</h3>
-        <div>
-            {% for pac in pac_otros %}
-			<li id={{pac.paciente.num_historia}} class="solicitud_item">
-                <input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
-                <input type="hidden" name="procedencia" value="Quirofano">
-                <input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
-                <input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
-                <input type="hidden" name="medico" value="{{pac.medico.codigo}}">
-                <b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
-                <br>
-                {{pac.diagnostico}}
-                <br>
-                <i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
-                <br>
-                <i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
-            </li>
-			{% endfor %}
-        </div>
-  
-      </div>
-    </div>
-  </div>
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				<p>Se muestran las habitaciones libres para asignar pacientes.</p>
+				<p>Arrastre el paciente de las listas de la derecha hasta la habitaci&oacute;n que desea asignarle.</p>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row">
+
+		<!--   Lista de habitaciones    -->
+		<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8">
+			<div class="grid-container">
+
+				{% if asignados %}	
+					<div class="{% if error %}habitacion_error{% else %}habitacion_info{% endif %}">
+						{{ asignados }}
+					</div>
+				{% endif %}
+			 
+				{% if formset.total_form_count > 0 %}
+					<form method="post" action="">
+
+						<div class="grid-container">
+							<input class="btn btn-primary" type="submit" value="Asignar habitaciones" />
+						</div>
+
+						{% csrf_token %}
+
+						<table class="table table-bordered">
+							
+							<thead>
+								<tr>
+									<th>N&uacute;mero de Habitaci&oacute;n</th>
+									<th>N&uacute;mero de Historia</th>
+									<th>Paciente</th>
+									<th >M&eacute;dico</th>
+									<th>Fecha estimada de salida</th>
+									<th>Procedencia</th>
+									<td></td>
+								</tr>
+							</thead>
+
+							<tbody>
+								{{ formset.management_form }}
+
+								{% for form in formset %}
+									{% if form.numero_habitacion.value %}
+									<tr class="habitacion">
+										<input type="hidden" name="id" value="{{ forloop.counter0 }}" />
+										<td style="font-size: 130%; vertical-align:middle;">
+											{{form.numero_habitacion.as_hidden }}
+											<center>{{form.numero_habitacion.value }}</center>
+										</td>
+										<td>
+											<center>{{form.numero_historia}}</center>
+										</td>
+										<td>
+											{{form.nombre}}
+										</td>
+										<td>
+											{{form.nombre_medico}}
+										</td>
+										<td>
+											{{form.fecha}}
+										</td>
+										<td>
+											{{form.procedencia}}
+										</td>
+										<td>
+											<a><span class="glyphicon glyphicon-remove"></span></a>
+										</td>
+									</tr>
+									{% endif %}
+								{% endfor %}
+							</tbody>							
+						</table>
+					</form>
+
+				{% else %}
+					<h4>No hay habitaciones disponibles en este momento.</h4>
+				{% endif %}
+
+			</div>	
+		</div>
+
+
+		<!--  Lista de Pacientecientes    -->
+		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+			<div class="grid-container">
+		
+				<div class= "row">
+					<div class="col-xs-8 col-sm-8 col-md-8 col-lg-8 text-center">
+						<h4>Solicitudes de camas</h4>
+					</div>
+
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+						<div class="papelera text-center"> 
+							<img width="45px" height="45px" src="/static/img/papelera-flat.png" /> 
+						</div> 
+					</div>
+				</div>
+					  
+				<div id="notaccordion">
+					<h3><a href="#">Emergencia Adultos</a></h3>
+					<div id="adultos">
+						{% for pac in pac_emergencia_adultos %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+
+					<h3><a href="#">Emergencia Pedi&aacute;trica</a></h3>
+					<div id="pediatra">
+						{% for pac in pac_emergencia_pediatra %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+
+					<h3>Quir&oacute;fano</h3>
+					<div id="quirofano">
+						{% for pac in pac_quirofano %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+
+					<h3>Sala de Partos</h3>
+					<div id="partos">
+						{% for pac in pac_parto %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+
+					<h3>UCI</h3>
+					<div id="uci">
+						{% for pac in pac_uci %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+
+					<h3>Adicionales</h3>
+					<div>
+						{% for pac in pac_adicional %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>:{{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+
+					<h3>Especiales</h3>
+					<div id="especiales">
+						{% for pac in pac_especial %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+
+					<h3>Traslados</h3>
+					<div id="traslado">
+						{% for pac in pac_traslado %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+
+					<h3>Otros</h3>
+					<div>
+						{% for pac in pac_otros %}
+							<li id={{pac.paciente.num_historia}} class="solicitud_item">
+								<input type="hidden" name="num_historia" value="{{pac.paciente.num_historia}}">
+								<input type="hidden" name="procedencia" value="Quirofano">
+								<input type="hidden" name="nombres" value="{{pac.paciente.nombres}} {{pac.paciente.apellidos}}">
+								<input type="hidden" name="fecha_salida" value="{{pac.fecha_salida}}">
+								<input type="hidden" name="medico" value="{{pac.medico.codigo}}">
+								<b>Nro. de Historia: {{pac.paciente.num_historia}}</b> - {{pac.paciente.nombres}} {{pac.paciente.apellidos}}
+								<br>
+								{{pac.diagnostico}}
+								<br>
+								<i><b>Salida estimada</b></i>: {{pac.fecha_salida}}
+								<br>
+								<i><b>M&eacute;dico tratante</b></i>: {{pac.medico.first_name}} {{pac.medico.last_name}}
+							</li>
+						{% endfor %}
+					</div>
+			  
+				</div>
+			</div>	
+		</div>
+	</div>
+
+
+				
+
+
+
 {% endblock %}

@@ -73,14 +73,19 @@ def solicitar_habitacion(request):
 			s_correo_solicitante    = pcd['correo_solicitante']
 			s_observacion           = pcd['observacion']
 						
-			try:
+			newPaciente = Paciente.objects.filter(cedula = s_cedula)
+			if newPaciente:
+
 				newPaciente = Paciente.objects.get(cedula = s_cedula)
 				testSolicitud = Solicitud.objects.filter(paciente_id = newPaciente.id, activa = True)
 				if not testSolicitud:
-					try:
-						newMedico = Medico.objects.get( codigo = s_codigo_doctor )
-						
+					
+					newMedico = Medico.objects.filter( codigo = s_codigo_doctor )
+					if newMedico:
+
 						if (s_fecha_ingreso <= s_fecha_salida):
+							
+							newMedico = Medico.objects.get( codigo = s_codigo_doctor )
 							s = Solicitud(paciente = newPaciente,
 									medico = newMedico,
 									diagnostico = s_diagnostico,
@@ -94,14 +99,14 @@ def solicitar_habitacion(request):
 							messages.success(request, 'La solicitud fue enviada con exito')
 							return redirect('/habitacion/listar_solicitudes')
 						else:
-							mnj_fecha = "La fecha de ingreso debe ser menor que la de egreso."
-					except ObjectDoesNotExist:
+							mnj_fecha = "La fecha de ingreso debe ser menor que la de egreso."	
+					else:
 						msj_tipo = "danger"
 						msj_info = "El medico no se encuentra registrado en el sistema."
 				else:
 					msj_tipo = "danger"
 					msj_info = "El paciente tiene una solicitud activa pendiente."
-			except ObjectDoesNotExist:
+			else:
 				msj_tipo = "danger"
 				msj_info = "El paciente no se encuentra registrado en el sistema."
 		
@@ -115,6 +120,7 @@ def solicitar_habitacion(request):
 			'showForm_second' : True
 			}
 		return render_to_response('solicitar_habitacion.html',info,context_instance=RequestContext(request))
+	
 	form = SolicitarHabitacion()
 	form2 = SolicitarPacienteNuevo()
 	info = {
@@ -149,28 +155,28 @@ def solicitar_paciente_nuevo(request):
 		s_procedencia			= pcd['procedencia']
 		s_correo_solicitante	= pcd['correo_solicitante']
 		s_observacion			= pcd['observacion']
+		
+		newPaciente = Paciente.objects.filter(cedula = s_cedula)
+		if not newPaciente:
 
-		try:
-			newPaciente = Paciente.objects.get(cedula = s_cedula)
-			print "crea un nuevo paciente con cedula ="+cedula
-		except ObjectDoesNotExist:
-			p = Paciente(
-					num_historia = s_num_historia,
-					tipo_cedula = s_tipo_cedula,
-					cedula = s_cedula,
-					nombres = s_nombres,
-					apellidos = s_apellidos,
-					sexo = s_sexo,
-					fecha_nacimiento = s_fecha_nacimiento,
-					fecha_ingreso_institucion = date.today()
-				)
-			p.save()
-			newPaciente = Paciente.objects.get(cedula = s_cedula)
-			print newPaciente
-			try:
-				newMedico = Medico.objects.get( codigo = s_codigo_doctor )
-									
+			newMedico = Medico.objects.filter( codigo = s_codigo_doctor )
+			if newMedico:
 				if (s_fecha_ingreso <= s_fecha_salida):
+					
+					p = Paciente(
+						num_historia = s_num_historia,
+						tipo_cedula = s_tipo_cedula, 
+						cedula = s_cedula,
+						nombres = s_nombres,
+						apellidos = s_apellidos,
+						sexo = s_sexo,
+						fecha_nacimiento = s_fecha_nacimiento,
+						fecha_ingreso_institucion = date.today()
+					)
+					p.save()
+					newPaciente = Paciente.objects.get(cedula = s_cedula)
+					newMedico = Medico.objects.get( codigo = s_codigo_doctor )
+
 					s = Solicitud(
 							paciente = newPaciente,
 							medico = newMedico,
@@ -186,14 +192,17 @@ def solicitar_paciente_nuevo(request):
 					messages.success(request, 'La solicitud fue enviada con exito')
 					return redirect('/habitacion/listar_solicitudes')
 				else:
-					mnj_fecha = "La fecha de ingreso debe ser menor que la de egreso."
-			except ObjectDoesNotExist:
+					msj_tipo = "danger"
+					msj_info = "La fecha de ingreso debe ser menor que la de egreso."
+					showForm = True
+			else:
 				msj_tipo = "danger"
 				msj_info = "El medico no se encuentra registrado en el sistema."
-		except:
+				showForm = True
+		else:
 			msj_tipo = "danger"
 			msj_info = "Ya existe un paciente registrado con la misma cedula."
-
+			showForm = True
 	else:
 		if request.method == 'POST':
 			showForm = True

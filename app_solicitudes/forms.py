@@ -6,7 +6,7 @@ from django.utils.safestring import mark_safe, SafeData
 
 from selectable.forms import AutoCompleteWidget
 
-class SolicitarHabitacion(forms.Form):
+class BaseSolicitar(forms.Form):
 
 	cedula           = forms.IntegerField(
 							max_value=999999999,
@@ -39,24 +39,7 @@ class SolicitarHabitacion(forms.Form):
 						),
 						required=False,
 					)
-	fecha_ingreso2 = forms.DateField(
-						label = "FECHA-INGRESO-2",
-						widget = forms.TextInput(
-							attrs = {
-								'placeholder':'Fecha de ingreso (dd/mm/aaaa)',
-								'class': 'form-control',
-							}
-						)
-					)
-	fecha_salida2 =  forms.DateField(
-						label = "FECHA-SALIDA-2",
-						widget = forms.TextInput(
-							attrs = {
-								'placeholder':'Fecha de salida (dd/mm/aaaa)',
-								'class' : 'form-control'
-							}
-						)
-					)
+
 	procedencia =   forms.ChoiceField(
 						choices = PROCEDENCIA,
 						widget=forms.Select(
@@ -83,9 +66,30 @@ class SolicitarHabitacion(forms.Form):
 							}
 						)
 					)
+
+
+class SolicitarHabitacion(BaseSolicitar):
+	fecha_ingreso2 = forms.DateField(
+						label = "FECHA-INGRESO-2",
+						widget = forms.TextInput(
+							attrs = {
+								'placeholder':'Fecha de ingreso (dd/mm/aaaa)',
+								'class': 'form-control',
+							}
+						)
+					)
+	fecha_salida2 =  forms.DateField(
+						label = "FECHA-SALIDA-2",
+						widget = forms.TextInput(
+							attrs = {
+								'placeholder':'Fecha de salida (dd/mm/aaaa)',
+								'class' : 'form-control'
+							}
+						)
+					)
 	
 	
-class SolicitarPacienteNuevo(SolicitarHabitacion):
+class SolicitarPacienteNuevo(BaseSolicitar):
 	num_historia     = forms.IntegerField(
 							max_value=999999,
 							widget = forms.TextInput(

@@ -65,80 +65,102 @@
         }
     });
     
-    function dar_alta( item ) {
+    function dar_alta( item, item2 ) {
         if (confirm("Realmente desea dar de alta a este paciente?")) {
-            $( item ).find('img').attr("src", "/static/img/alta_dis.png");
-        //     $( item ).innerHTML = "En proceso";
-            var $objeto = $( item ).parent();
-            var alt = $objeto.attr("alt");
-            $('.' + alt).removeClass("amarillo_claro");
-            $('.' + alt).addClass("azul_claro");
+            $( "#"+item ).css("color","green");
+			$(item2).css("display","none");
         }
     }  
   </script>
 {% endblock %}
 
 {% block body %}
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				
+				<h4 class="text-center">
+					Censo
+				</h4>
+
+			</div>
+		</div>
+	</div>
+		<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				{{hoy}}
+			</div>
+		</div>
+	</div>
+	
 <div class="row">
-    <div class="cuadroGrande centrar">
-      <h4>
-        <center><u>Censo</u></center>
-      </h4>  
-      <h5><center> {{ hoy }} </center></h5>
-      {% if ingresos %}
-        <table id="tabla_censo">
-            <thead>
-                <tr>
-                    <th>N&uacute;mero de Habitaci&oacute;n</th>
-                    <th>Paciente</th>
-                    <th>M&eacute;dico</th>
-                    <th>Fecha estimada de salida</th>
-                    <th>Nro. D&iacute;as en la habitaci&oacute;n</th>
-                    <th>Nro. D&iacute;as en la instituci&oacute;n</th>
-                    <th>Procedencia</th>
-                    <th>Dar alta</th>
-                </tr>
-            </thead>
-                       
-            <tbody>
-                {% for ingreso in ingresos %}
-                <div alt="{{ ingreso.id }}" class="hidden-coloreable" style="display: none;">
-                    {{ ingreso.es_hoy }}
-                </div>
-                <tr>
-                  <td class="{{ ingreso.id }}">
-                      {{ ingreso.habitacion.numero }}
-                  </td>
-                  <td class="{{ ingreso.id }}">
-                      {{ ingreso.solicitud.paciente }}
-                  </td>
-                  <td class="{{ ingreso.id }}">
-                      Dr. {{ ingreso.solicitud.medico }}
-                  </td>
-                  <td class="{{ ingreso.id }}">
-                      {{ ingreso.solicitud.salida }}
-                  </td>
-                  <td class="coloreable" style="font-size: 25px; color: white">
-                      {{ ingreso.num_dias }}
-                  </td>
-                  <td class="coloreable" style="font-size: 25px; color: white">
-                      {{ ingreso.solicitud.paciente.ingreso }}
-                  </td>
-                  <td class="{{ ingreso.id }}">
-                       {{ ingreso.procedencia }}
-                  </td>
-                  <td alt="{{ ingreso.id }}" class="{{ ingreso.id }}">
-                      <a onclick="dar_alta(this);" href="#"><img class="marginleft5 width40" src="/static/img/alta_en.png" /></a>
-                  </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-      </table>
-      {% else %}
-      <h4>No hay pacientes en este momento.</h4>
-      {% endif %}
-    </div>
-  </div>
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				
+				<br>
+			  {% if ingresos %}
+			  <table id="table-censo" class="table table-bordered table-striped">
+							<thead>
+								<tr >
+									<th>Habitaci&oacute;n</th>
+									<th>Paciente</th>
+									<th>M&eacute;dico</th>
+									<th>Fecha est. salida</th>
+									<th>D&iacute;as en la habitaci&oacute;n</th>
+									<th>D&iacute;as en la instituci&oacute;n</th>
+									<th>Procedencia</th>
+									<th>Dar alta</th>
+								</tr>
+							</thead>
+
+							<tbody id="table-censo-body">
+								{% for ingreso in ingresos %}
+									<div alt="{{ ingreso.id }}" class="hidden-coloreable" style="display: none;">
+										{{ ingreso.es_hoy }}
+									</div>
+									<tr id="{{ ingreso.habitacion.numero }}">
+									  <td class="{{ ingreso.id }}">
+										  {{ ingreso.habitacion.numero }}
+									  </td>
+									  <td class="{{ ingreso.id }}">
+										  {{ ingreso.solicitud.paciente }}
+									  </td>
+									  <td class="{{ ingreso.id }}">
+										  Dr. {{ ingreso.solicitud.medico }}
+									  </td>
+									  <td class="{{ ingreso.id }}">
+										  {{ ingreso.solicitud.salida }}
+									  </td>
+									  <td  style="color: white">
+										<div class="coloreable" style="width: 100%; opacity: .8">
+											{{ ingreso.num_dias }}
+										</div>
+									  </td>
+									  <td class="coloreable" style="color: white">
+										<div class="coloreable" style="width: 100%; opacity: .8">
+											{{ ingreso.solicitud.paciente.ingreso }}
+										</div>
+									  </td>
+									  <td class="{{ ingreso.id }}">
+										   {{ ingreso.procedencia }}
+									  </td>
+									  <td alt="{{ ingreso.id }}" class="{{ ingreso.id }}" align="center">
+										<div onclick="dar_alta({{ ingreso.habitacion.numero }}, this)" style="width:100%">
+										  <a href="#"><span class="glyphicon glyphicon-home"></span></a>
+										</div>
+									  </td>
+									</tr>
+								{% endfor %}
+							</table>
+						</tbody>
+			  {% else %}
+				<h4>No hay pacientes en este momento.</h4>
+			{% endif %}
+		</div>
+	</div>
+</div>		
+
 
 {% endblock %}
         

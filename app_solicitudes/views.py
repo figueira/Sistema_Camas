@@ -18,6 +18,7 @@ from django.forms.formsets import formset_factory
 # Manejo de Informacion de esta aplicacion
 from models import *
 from forms import *
+from app_camas.models import *
 from app_usuario.models import *
 
 from datetime import date
@@ -80,29 +81,35 @@ def solicitar_habitacion(request):
 				testSolicitud = Solicitud.objects.filter(paciente_id = newPaciente.id, activa = True)
 				if not testSolicitud:
 					
-					newMedico = Medico.objects.filter( codigo = s_codigo_doctor )
-					if newMedico:
+					testIngreso = Ingreso.objects.filter(paciente_id = newPaciente.id, alta = False)
+					if not testIngreso:
 
-						if (s_fecha_ingreso <= s_fecha_salida):
-							
-							newMedico = Medico.objects.get( codigo = s_codigo_doctor )
-							s = Solicitud(paciente = newPaciente,
-									medico = newMedico,
-									diagnostico = s_diagnostico,
-									fecha_ingreso = s_fecha_ingreso,
-									fecha_salida = s_fecha_salida,
-									procedencia = s_procedencia,
-									correo_solicitante = s_correo_solicitante,
-									observacion = s_observacion)
-							s.save()
-							
-							messages.success(request, 'La solicitud fue enviada con exito')
-							return redirect('/habitacion/listar_solicitudes')
+						newMedico = Medico.objects.filter( codigo = s_codigo_doctor )
+						if newMedico:
+
+							if (s_fecha_ingreso <= s_fecha_salida):
+
+								newMedico = Medico.objects.get( codigo = s_codigo_doctor )
+								s = Solicitud(paciente = newPaciente,
+										medico = newMedico,
+										diagnostico = s_diagnostico,
+										fecha_ingreso = s_fecha_ingreso,
+										fecha_salida = s_fecha_salida,
+										procedencia = s_procedencia,
+										correo_solicitante = s_correo_solicitante,
+										observacion = s_observacion)
+								s.save()
+								
+								messages.success(request, 'La solicitud fue enviada con exito')
+								return redirect('/habitacion/listar_solicitudes')
+							else:
+								mnj_fecha = "La fecha de ingreso debe ser menor que la de egreso."	
 						else:
-							mnj_fecha = "La fecha de ingreso debe ser menor que la de egreso."	
+							msj_tipo = "danger"
+							msj_info = "El medico no se encuentra registrado en el sistema."
 					else:
 						msj_tipo = "danger"
-						msj_info = "El medico no se encuentra registrado en el sistema."
+						msj_info = "El paciente ya tiene asignada una cama."
 				else:
 					msj_tipo = "danger"
 					msj_info = "El paciente tiene una solicitud activa pendiente."

@@ -44,26 +44,25 @@
 		</div>
 	</div>
 
-	<div class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-			<div class="grid-container">
-				{% if solicitudes_activas %}
-					<h5>&nbsp;&nbsp;&nbsp;Se muestran las solicitudes pendientes por aprobaci&oacute;n hasta el momento</h5>
-				{% else %}
-					<h5>&nbsp;&nbsp;&nbsp;No hay solicitudes pendientes en este momento.</h5>
-				{% endif %}
+	{% if solicitudes_activas %}
+		<div class="row">
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container">
+					&nbsp;&nbsp;&nbsp;
+					<a id="show-form-link" href="/habitacion/asignar">
+						<span class="glyphicon glyphicon-pushpin"></span>
+						Asignar Camas
+					</a>
+				</div>
 			</div>
 		</div>
-	</div>
-
-	{% if solicitudes_activas %}
 
 		<div class="row">
 			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 				<div class="grid-container">
 					
 					<br>
-					
+
 					<table id="table-user" class="table table-bordered table-striped">
 						{% csrf_token %}
 						<thead>

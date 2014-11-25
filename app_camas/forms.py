@@ -3,7 +3,8 @@ from models import *
 
 class HabitacionForm(forms.Form):
 	
-	numero_habitacion = forms.IntegerField(
+	numero_habitacion = forms.CharField(
+								max_length = 6,
 								widget = forms.TextInput(
 									attrs={
 										'readonly':'readonly',

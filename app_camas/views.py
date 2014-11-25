@@ -40,10 +40,9 @@ def asignar_habitacion(request):
 			
 			if form.is_valid():
 				valid_forms = True
-				
 				cdata = form.cleaned_data
 				
-				numero_habitacion = int(cdata['numero_habitacion'])
+				numero_habitacion = str(cdata['numero_habitacion'])
 				numero_historia = int(cdata['numero_historia'])
 				nombre = str(cdata['nombre'])
 				nombre_medico = str(cdata['nombre_medico'])
@@ -54,7 +53,7 @@ def asignar_habitacion(request):
 				sol = Solicitud.objects.filter(paciente=pac)[0]
 				hab = Habitacion.objects.filter(numero=numero_habitacion)[0]
 				
-				ingreso = Ingreso(
+				ingreso = Ingreso( 
 					solicitud = sol,
 					habitacion = hab,
 					paciente = pac
@@ -62,8 +61,8 @@ def asignar_habitacion(request):
 				
 				ingreso.save()
 				hab.estado = 'O'
-				hab.save()
 				sol.activa = False
+				hab.save()
 				sol.save()				  
 								
 				hab_history_date = datetime.now()
@@ -74,12 +73,12 @@ def asignar_habitacion(request):
 				info['asignados'] = info['asignados'] + '\n' + str(form.errors)
 		
 		if valid_forms:
-			info['asignados'] = 'Asignados los pacientes :D'
+			info['asignados'] = 'Asignados los pacientes'
 			messages.success(request, 'Los pacientes fueron asignados correctamente')
 			
 		else:
 			info['error'] = 1
-			messages.error(request, 'Ocurrio un error asignando pacientes')
+			messages.error(request, 'Ocurrio un error asignando pacientes') 
 		
 		
 		return HttpResponseRedirect('/habitacion/asignar')

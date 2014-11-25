@@ -57,7 +57,7 @@ def sesion_iniciar(request):
 					info = {'usuario':usuario}
 				return render_to_response('loged.html',info,context_instance=RequestContext(request))
 
-		msj_tipo = "error"
+		msj_tipo = "danger"
 		msj_info = "Error en clave"
 		form = IniciarSesionForm()
 		info = {'msj_tipo':msj_tipo,'msj_info':msj_info,'form':form}
@@ -75,9 +75,9 @@ def sesion_cerrar(request):
 def clave_restablecer(request):
 	mensaje = ""
 	if request.method == 'POST':
-		form = restablecerClave(request.POST)
-		if form.is_valid():
-			pcd = form.cleaned_data
+		formRestablecer = restablecerClave(request.POST)
+		if formRestablecer.is_valid():
+			pcd = formRestablecer.cleaned_data
 			f_correo = pcd['correo']
 			f_usuario = pcd['usuario']
 			usuario = Usuario.objects.filter(email=f_correo)
@@ -90,15 +90,24 @@ def clave_restablecer(request):
 				email.send()
 				usuario.set_password(clave)
 				usuario.save()
+
+				msj_tipo = "success"
 				mensaje = "Su nueva clave fue enviada al correo suministrado"
-				form = restablecerClave()
-				info = {'form':form,'mensaje':mensaje}
+				formRestablecer = restablecerClave()
+				form = IniciarSesionForm()
+				info = {'formRestablecer':formRestablecer,'form':form,'msj_tipo':msj_tipo,'msj_info':mensaje}
 				return render_to_response('restablecerClave.html',info,context_instance=RequestContext(request))
 		else:
-			mensaje = "Error con el formulario"
+			msj_tipo = "danger"
+			mensaje = "Existen errores con el formulario."
+			formRestablecer = restablecerClave()
+			form = IniciarSesionForm()
+			info = {'formRestablecer':formRestablecer,'form':form,'msj_tipo':msj_tipo,'msj_info':mensaje}
+			return render_to_response('restablecerClave.html',info,context_instance=RequestContext(request))
+
 	formRestablecer = restablecerClave()
 	form = IniciarSesionForm()
-	info = {'form':form,'formRestablecer':formRestablecer,'mensaje':mensaje}
+	info = {'form':form,'formRestablecer':formRestablecer}
 	return render_to_response('restablecerClave.html',info,context_instance=RequestContext(request))
 
 

@@ -23,6 +23,10 @@
 			if($( "#form-type-user").val() == 'M') {
 				$("#codigoMedicoForm").fadeIn();
 			}
+
+			if($("#cambiar_clave_checkbox").is(':checked')){
+				cambiar_clave_form();
+			}
 		});
 
 	</script>

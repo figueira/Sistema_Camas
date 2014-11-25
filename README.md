@@ -3,7 +3,7 @@ Sistema de Gestión de Camas
 Módulo de Gestión de Camas del sistema desarrollado como MiniProyecto de Desarollo de Software en la Universidad Simón Bolívar para el Centro Médico de Caracas.
 
 ----
----:Última modificación: 24 de noviembre de 2014. Johnny Ramirez, Gabriel Russo y Carla Barazarte.
+---:Última modificación: 25 de noviembre de 2014. Johnny Ramirez, Gabriel Russo y Carla Barazarte.
 
 Directorios
 ===========

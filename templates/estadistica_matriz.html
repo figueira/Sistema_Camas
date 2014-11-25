@@ -36,7 +36,7 @@
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="grid-container">
 				<table class="table table-bordered">
-					<tbody style="background-color: #fff;">
+					<tbody>
 						{% for hab in habs %}
 							{% cycle '<tr>' '' '' '' '' '' '' '' '' '' '' '' '' '' '' %}
 								<td class="{{ hab.estado }}">{{ hab.numero }}</td>
@@ -70,6 +70,6 @@
 			</div>
 		</div>
 	</div>
-	
+
 {% endblock %}
 

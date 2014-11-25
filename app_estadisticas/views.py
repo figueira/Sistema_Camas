@@ -69,6 +69,24 @@ def dias_ocupada( hab , dia ):
 			
 		return 5 # Si nunca sali del for, llevo mas de 5 dias
 
+
+def join_list(deck, list_1, list_2):
+	for i in range(max((len(list_1),len(list_2)))):
+		while True:
+			try:
+				card = (list_1[i],list_2[i])
+			except IndexError:
+				if len(list_1)>len(list_2):
+					list_2.append('')
+					card = (list_1[i],list_2[i])
+				elif len(list_1)<len(list_2):
+					list_1.append('')
+					card = (list_1[i], list_2[i])
+				continue
+			deck.append(card)
+			break
+
+
 @login_required(login_url='/')
 def termometro(request , dia = None , mes = None , ano = None ):
 	
@@ -109,10 +127,15 @@ def termometro(request , dia = None , mes = None , ano = None ):
 				})
 		
 		termometro = sorted(termometro, key=lambda k: k['dias_ocu'])
+
+		A = termometro[:len(termometro)//2]
+		B = termometro[len(termometro)//2:]
+		termometro_test = []
+		join_list(termometro_test, A, B)
 				
 		termometros_semana.append({
 				'dia' : dia,
-				'habs': termometro,
+				'list' : termometro_test,
 			})
 	
 	semana_ant = (fecha - timedelta(7)).strftime('%d/%m/%Y')

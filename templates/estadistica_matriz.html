@@ -17,19 +17,23 @@
 	<div class="row">
 		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
 			<div class="grid-container">
-				&nbsp;&nbsp;
-				<a href="/estadisticas/termometro/">
-					<img src="/static/img/menus/icono-termometro.png">
-					Vista term&oacute;metro
-				</a>
-				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-				<a href="#">
-					<img src="/static/img/menus/icono-matriz.png">
-					Vista matriz
-				</a>
+				<div class="row">
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
+						<a href="/estadisticas/termometro">
+							<img src="/static/img/menus/icono-termometro.png">
+							&nbsp;&nbsp;Vista term&oacute;metro
+						</a>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
+						<a href="/estadisticas/matriz">
+							<img src="/static/img/menus/icono-matriz.png">
+							&nbsp;&nbsp;Vista matriz
+						</a>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>				
+	</div>			
 
 	<br>
 	<div class="row">
@@ -49,27 +53,51 @@
 	</div>
 
 	<div class="row">
-		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+		<div class="col-xs-12 col-sm-3 col-md-12 col-lg-12">
 			<div class="grid-container">
-				<table>
-					<tbody>
-						<tr>
-							<td width="7%" class = "D leyenda"> </td>
-							<td>&nbsp;&nbsp;Disponible.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-							<td width="7%" class = "A leyenda"> </td>
-							<td>&nbsp;&nbsp;Alta.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-							<td width="7%" class = "L leyenda">  </td>
-							<td>&nbsp;&nbsp;Limpieza.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-							<td width="7%" class = "O leyenda">  </td>
-							<td>&nbsp;&nbsp;Ocupada.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
-							<td  width="7%" class = "M leyenda">  </td>
-							<td>&nbsp;&nbsp;Mantenimiento.&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>				
-						</tr>
-					</tbody>
-				</table>
+				<div class="row">
+					<div class="col-xs-2 col-xs-offset-1 col-sm-2 col-sm-offset-1 col-md-2 col-md-offset-1 col-lg-2 col-lg-offset-1 text-center">
+						<span class="D leyenda">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>Disponible.</span>
+					</div>
+
+					<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
+						<span class="A leyenda">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>Alta</span>
+					</div>
+
+					<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
+						<span class="L leyenda">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>Limpieza</span>
+					</div>
+
+					<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
+						<span class="O leyenda">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>Ocupada.</span>
+					</div>
+					<div class="col-xs-2 col-sm-2 col-md-2 col-lg-2 text-center">
+						<span class="M leyenda">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>Mantenimiento.</span>
+					</div>
+				</div>
 			</div>
 		</div>
-	</div>
+	</div>	
 
 {% endblock %}
 

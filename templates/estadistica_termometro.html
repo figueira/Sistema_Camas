@@ -1,265 +1,300 @@
 {% extends "base.html" %}
 
+{% block styles %}  
+	<link rel="stylesheet" href="/static/libs/datepicker/css/bootstrap-datetimepicker.min.css">
+	<link rel="stylesheet" href="/static/css/tipsy.css">
+{% endblock %}
+
 {% block scripts %}
-  <script>
-    $(function() {
-        var elements = document.getElementsByClassName("coloreable");
-        var coloreable;
-        for (var i = 0; i < elements.length; i++) {
-            coloreable = elements[i];
-            num = coloreable.innerHTML;
-            if (num <= 2) {
-                coloreable.className += " verde";
-            } else if (num <= 4) {
-                coloreable.className += " amarillo";
-            } else if (num >= 5) {
-                coloreable.className += " rojo";
-            }  else {
-                coloreable.className += " azul_claro"
-            }
-        }
-    });
-    
-  
-  // Instantiate and draw our chart, passing in some options.
-      function selectHandler() {
-        var selectedItem = chart.getSelection()[0];
-        if (selectedItem) {
-          var topping = data.getValue(selectedItem.row, 0);
-          alert('The user selected ' + topping);
-        }
-      }
-  
-      google.visualization.events.addListener(chart, 'select', selectHandler);    
-      chart.draw(data, options);
-      chart2.draw(data2,options2);
-    
-  </script>
+
+	<script src="{{ STATIC_URL }}selectable/js/jquery.dj.selectable.js"></script>
+
+	<!--Datetime Picker -->
+	<script type="text/javascript" src="{{ STATIC_URL }}libs/datepicker/js/bootstrap-datetimepicker.min.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}libs/jquery/js/jquery.tipsy.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}libs/spin/js/spin.js"></script>
+	<script type="text/javascript" src="{{ STATIC_URL }}libs/spin/js/spin.min.js"></script>
+
+	<script>
+		$(function() {
+			var elements = document.getElementsByClassName("coloreable");
+			var coloreable;
+			for (var i = 0; i < elements.length; i++) {
+				coloreable = elements[i];
+				num = coloreable.innerHTML;
+				if (num <= 2) {
+					coloreable.className += " verde";
+				} 
+				else if (num <= 4) {
+					coloreable.className += " amarillo";
+				} 
+				else if (num >= 5) {
+					coloreable.className += " rojo";
+				}  
+				else {
+					coloreable.className += " azul_claro"
+				}
+			}
+		});
+		
+	  
+		// Instantiate and draw our chart, passing in some options.
+		function selectHandler() {
+			var selectedItem = chart.getSelection()[0];
+			if (selectedItem) {
+				var topping = data.getValue(selectedItem.row, 0);
+				alert('The user selected ' + topping);
+			}
+		}
+	  
+	  	/*
+		google.visualization.events.addListener(chart, 'select', selectHandler);    
+		chart.draw(data, options);
+		chart2.draw(data2,options2);
+		*/
+
+		$(document).ready(function(){
+			$( "#fecha_desde, #fecha_hasta" ).datepicker({ dateFormat: "dd/mm/yy" });
+		});
+		
+
+	</script>
 {% endblock %}
 
 {% block body %}
-  
-    <table  style="text-align:left">
-        <tr>
-		<td width="10%">
-			<h4>
-			<a href="/estadisticas/matriz">
-				Vista matriz
-			</a>
-			</h4>
-		</td>
-		
-		<td width="4%">
-			<h4>|</h4>
-		</td>
-		
-		<td width="50%" >
-			<h4 style="color:grey">
-				Vista term&oacute;metro
-			</h4>
-		</td>
-	</tr>
-  </table>
-  
-	<div class="titulo">
-		Term&oacute;metro
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				<h4 class="text-center">Term&oacute;metro</h4>
+			</div>
+		</div>
 	</div>
-  
-  <br>
-  <br>
-  
-  <table align="right">
-	<tr>
-		<td>
-			<a href="/estadisticas/termometro/{{ semana_ant }}">
-				Ver Semana Anterior
-			</a>
-		</td>
-		<td>
-			|
-		</td>
-		<td>
-			<a href="/estadisticas/termometro/{{ semana_act }}">
-				Ver Semana Actual
-			</a>
-		</td>
-		<td>
-			|
-		</td>
-		<td >
-			<a href="/estadisticas/termometro/{{ semana_sig }}">
-				Ver Semana Siguiente
-			</a>
-		</td>
-	</tr>
-  </table>
-  
-  <br>
-  <br>
-	
-	<table>
-		<tr>
-			<td valign="top">
-				<div class="span4">
-				  <h3>B&uacute;squeda Espec&iacute;fica</h3>
-				  Desde:
-				  <span id="fecha_inicio" class="input-append">
-					<input data-format="dd-mm-aaaa" 
-						   placeholder="dd-mm-aaaa" 
-						   id="inicio" 
-						   type="text">
-					</input>
-					<span class="add-on">
-					  <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-					  </i>
-					</span>
-				  </span>
-				  <span id="error_inicio" class="errorlist"></span>
-				  <br/>
-				  
-				  <script type="text/javascript">
-					$(function() {
-					  $('#fecha_inicio').datetimepicker({
-						pickTime: false
-					  });
-					  
-					  // Se cierra el calendario al seleccionar fecha
-					  $('#fecha_inicio').on('changeDate', function(e) {
-						$('#fecha_inicio').datetimepicker('hide');
-					  });	
-					});
-				  </script>
-				  
-				  Hasta:&nbsp;
-				  <span id="fecha_fin" class="input-append">
-					<input data-format="dd-MM-yyyy" 
-						   placeholder="dd-mm-yyyy" 
-						   id="fin" 
-						   type="text">
-					</input>
-					<span class="add-on">
-					  <i data-time-icon="icon-time" data-date-icon="icon-calendar">
-					  </i>
-					</span>
-				  </span>
-				  <span id="error_fin" class="errorlist"></span>
-				  <br/>
-				  <script type="text/javascript">
-					$(function() {
-					  $('#fecha_fin').datetimepicker({
-						pickTime: false
-					  });
-					  
-					  // Se cierra el calendario al seleccionar fecha
-					  $('#fecha_fin').on('changeDate', function(e) {
-						$('#fecha_fin').datetimepicker('hide');
-					  });
-					});
-				  </script>
-			  
-				  
-					<div class="der">
-					  <a id="ir_est" href="#" class="btn btn-primary">
-						Ver Per&iacute;odo
-					  </a>
-					  
-					<script>
-					function verificarFecha(valor) {
-				  var anoMin = 1902;
-				  var anoMax = (new Date()).getFullYear();
 
-				  var error = "";
-
-				  // regular expression to match required date format
-				  re = /^(\d{1,2})\-(\d{1,2})\-(\d{4})$/;
-
-				  if(valor != '') {
-					if(regs = valor.match(re)) {
-					  if(regs[1] < 1 || regs[1] > 31) {
-					error = "Día inválido: " + regs[1];
-					  } else if(regs[2] < 1 || regs[2] > 12) {
-					error = "Mes inválido: " + regs[2];
-					  } else if(regs[3] < anoMin || regs[3] > anoMax) {
-					error = "Año inválido: " + regs[3];
-					  }
-					} else {
-					  error = "Formato de fecha inválido: " + valor;
-					}
-				  } else {
-					error = "No se aceptan valores vacíos";
-				  }
-
-				  return error;
-				}
-					
-					</script>
-					<script>
-					  $("#ir_est").click(function(){
-					var inicio = $("#inicio").val();
-					var fin = $("#fin").val()
-					var error_inicio = verificarFecha(inicio);
-					var error_fin = verificarFecha(fin);
-					if (error_inicio != "" || error_fin != "") {
-					  $('#error_inicio').text(error_inicio);
-					  $('#error_fin').text(error_fin);
-					} else {
-					  $("#ir_est").attr("href", "/estadisticas/" + 
-												  inicio + "/" + 
-												  fin);
-					}
-					  });      
-					</script>
-				  </div>
-				  <br>
-				  <b>Leyenda:</b>
-				  <br>
-				  <table cellspacing="10" style="border-collapse:separate;border-spacing:10px;">
-					<tr>
-						<td width="30px" class="dias_ocupada0" style="border: 1px solid black;"> </td>
-						<td>Habitacion libre</td>
-					</tr>
-					<tr>
-						<td width="30px" class="dias_ocupada1" style="border: 1px solid black;"> </td>
-						<td>De 1 a 2 días ocupada</td>
-					</tr>
-					<tr>
-						<td width="30px" class="dias_ocupada3" style="border: 1px solid black;"> </td>
-						<td>De 3 a 4 días ocupada</td>
-					</tr>
-					<tr>
-						<td width="30px" class="dias_ocupada5" style="border: 1px solid black;"> </td>
-						<td>5 o más días ocupada</td>
-					</tr>
-				  </table>
-				  
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container">
+				<div class="row">
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
+						<a href="/estadisticas/termometro">
+							<img src="/static/img/menus/icono-termometro.png">
+							&nbsp;&nbsp;Vista term&oacute;metro
+						</a>
+					</div>
+					<div class="col-xs-6 col-sm-6 col-md-6 col-lg-6 text-center">
+						<a href="/estadisticas/matriz">
+							<img src="/static/img/menus/icono-matriz.png">
+							&nbsp;&nbsp;Vista matriz
+						</a>
+					</div>
 				</div>
-			</td>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+			<div class="grid-container text-center">
+				<a href="/estadisticas/termometro/{{ semana_ant }}">
+					Ver Semana Anterior
+				</a>
+			</div>
+		</div>
+		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+			<div class="grid-container text-center">
+				<a href="/estadisticas/termometro/{{ semana_act }}">
+					Ver Semana Actual
+				</a>
+			</div>
+		</div>
+		<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+			<div class="grid-container text-center">
+				<a href="/estadisticas/termometro/{{ semana_sig }}">
+					Ver Semana Siguiente
+				</a>
+			</div>
+		</div>
+	</div>		
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<div class="grid-container clearfix">
+				<div class="row">
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4 text-center">
+						<a id="ir_est" href="#" class="btn btn-primary">
+							Ver Per&iacute;odo
+						</a>
+					</div>
 			
-			<!-- TERMOMETROS -->
-			<td>
-				<div>
-					<table cellpadding="13" width="100%" style="text-align:center">
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+						<span id="error_inicio" class="errorlist"></span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>
+
+							<div class="input-append">
+								<input class="form-control" id="fecha_desde" placeholder="Desde: (dd/mm/aaaa)" type="text">
+								<span  class="add-on">
+									<i data-time-icon="icon-time" data-date-icon="icon-calendar"> 
+									</i>
+								</span>
+							</div>
+						</div>
+
+					</div>
+
+					<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+
+						<span id="error_inicio" class="errorlist"></span>
+						<div class="input-group">
+							<span class="input-group-addon">
+								<span class="glyphicon glyphicon-calendar"></span>
+							</span>
+
+							<div class="input-append">
+								<input class="form-control" id="fecha_hasta" placeholder="Hasta: (dd/mm/aaaa)" type="text">
+								<span  class="add-on">
+									<i data-time-icon="icon-time" data-date-icon="icon-calendar"> 
+									</i>
+								</span>
+							</div>
+						</div>
+
+					</div>
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+			
+					  
+	<script>
+		function verificarFecha(valor) {
+			var anoMin = 1902;
+			var anoMax = (new Date()).getFullYear();
+			var error = "";
+
+			// regular expression to match required date format
+			re = /^(\d{1,2})\-(\d{1,2})\-(\d{4})$/;
+
+			if(valor != '') {
+				if(regs = valor.match(re)) {
+					if(regs[1] < 1 || regs[1] > 31) {
+						error = "Día inválido: " + regs[1];
+					} 
+					else if(regs[2] < 1 || regs[2] > 12) {
+						error = "Mes inválido: " + regs[2];
+					} 
+					else if(regs[3] < anoMin || regs[3] > anoMax) {
+						error = "Año inválido: " + regs[3];
+					}
+				} 
+				else {
+					error = "Formato de fecha inválido: " + valor;
+				}
+			} 
+			else {
+				error = "No se aceptan valores vacíos";
+			}
+
+			return error;
+		}
+	</script>
+
+	<script>
+		$("#ir_est").click(function() {
+			var inicio = $("#inicio").val();
+			var fin = $("#fin").val()
+			var error_inicio = verificarFecha(inicio);
+			var error_fin = verificarFecha(fin);
+			if (error_inicio != "" || error_fin != "") {
+				$('#error_inicio').text(error_inicio);
+				$('#error_fin').text(error_fin);
+			} 
+			else {
+				$("#ir_est").attr("href", "/estadisticas/" + inicio + "/" + fin);
+			}
+		});      
+	</script>	
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-3 col-md-12 col-lg-12">
+			<div class="grid-container">
+				<div class="row">
+					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">
+						<span class="dias_ocupada0" style="border: 1px solid black;">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>Habitacion libre</span>
+					</div>
+
+					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">
+						<span class="dias_ocupada1" style="border: 1px solid black;">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>1 a 2 días ocupada</span>
+					</div>
+
+					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">
+						<span class="dias_ocupada3" style="border: 1px solid black;">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>3 a 4 días ocupada</span>
+					</div>
+
+					<div class="col-xs-3 col-sm-3 col-md-3 col-lg-3 text-center">
+						<span class="dias_ocupada5" style="border: 1px solid black;">
+							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						</span>
+						&nbsp;&nbsp;
+						<span>5 o más días ocupada</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+
+	<div class="row">
+		<div class="col-xs-12 col-sm-3 col-md-12 col-lg-12">
+			<div class="grid-container">
+				<table class="table table-bordered text-center">
+					<tbody>
 						<tr>
+
 						{% for termometro in termometros %}
 							<td valign="top">
 								<b>{{ termometro.dia|date:'D' }}<br>{{termometro.dia|date:'d/m/Y'}}</b>
 								<br>
 								<br>
-								<table border="1" cellpadding="5">
-									{% for hab in termometro.habs %}
-									<tr class="dias_ocupada{{ hab.dias_ocu }}">
-										<td>{{ hab.hab.numero }}</td>
-									</tr>
-									{% endfor %}
+								<table class="table table-bordered" style="background-color: transparent;">
+									<tbody>
+										{% for hab in termometro.list %}
+											<tr >												
+												{% for t in hab %}
+													<td class="dias_ocupada{{ t.dias_ocu }}">{{ t.hab.numero }}</td>
+												{% endfor %}
+											</tr>
+										{% endfor %}
+									<tbody>
 								</table>
 							</td>
 						{% endfor %}
+						
 						</tr>
-					</table>
-				</div>
-			</td>
-		</tr>
-	</table>
+					</tbody>
+				</table>
+			</div>
+		</div>
+	</div>
 	
-	
+
+
 {% endblock %}

@@ -8,8 +8,6 @@ urlpatterns = patterns('app_usuario.views',
     url('^sesion/iniciar/$','sesion_iniciar'),
     url('^sesion/cerrar$','sesion_cerrar'),
 
-    
-    
     url('^usuario/solicitar$','usuario_solicitar'),
     url('^usuario/pendientes$','usario_listarPendientes'),
     url('^usuario/pendientes/(?P<cedulaU>\d+)/aprobar$', 'usuario_aprobar'),

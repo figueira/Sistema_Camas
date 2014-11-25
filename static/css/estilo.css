@@ -26,6 +26,13 @@ body {
   padding: 15px 10px 10px;
 }
 
+.navbar .brand  > img {
+	margin-top: 4px;
+	margin-left: 5px;
+	height: 40px;
+	width: 40px;
+}
+
 .navbar-nav >li{
   border: 1px solid transparent;
 }

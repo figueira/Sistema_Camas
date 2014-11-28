@@ -353,50 +353,79 @@ def usuario_deshabilitar(request,cedulaU):
 	return redirect("/usuario/listar")
 
 
-
-
-
 def usuario_solicitar(request):
 	mensaje = ""
+	form = IniciarSesionForm()
 	if request.method == 'POST':
-		form = SolicitarCuenta(request.POST)
-		if form.is_valid():
-			pcd = form.cleaned_data
+		formSolicitar = SolicitarCuenta(request.POST)
+		if formSolicitar.is_valid():
+			pcd = formSolicitar.cleaned_data
+			u_tipo		       = pcd['tipo']
+			u_codigoMedico	   = pcd['codigoMedico']
 			u_cedula           = pcd['cedula']
 			u_nombres          = pcd['nombres']
 			u_apellidos        = pcd['apellidos']
-			u_tipo		       = pcd['tipo']
-			u_sexo             = pcd['sexo']
-			u_cel              = pcd['cod_cel'] + pcd['num_cel']
-			u_direccion        = pcd['direccion']
-			u_tlf_casa         = pcd['cod_casa'] + pcd['num_casa']
 			u_email            = pcd['email']
+			u_email0           = pcd['email0']
 			u_clave            = pcd['clave']
 			u_clave0           = pcd['clave0']
 			u_administrador    = pcd['administrador']
-			prueba = Usuario.objects.filter(cedula=u_cedula)
+
+			prueba = Usuario.objects.filter(username=u_cedula)
 			prueba2 = (u_clave==u_clave0)
+
 			if not prueba:
 				if prueba2:
-					  u = Usuario(username=u_cedula,cedula=u_cedula,first_name=u_nombres,habilitado=False,last_name=u_apellidos,tipo=u_tipo,administrador=u_administrador,sexo=u_sexo,tlf_cel=u_cel,direccion=u_direccion,tlf_casa=u_tlf_casa,email=u_email,password=u_clave)
-					  u.is_active = True
-					  u.set_password(u_clave)
-					  if u_administrador == True:
-						  u.is_staff = True
-					  u.save() 	
-					  return redirect('/')
+					prueba2 = (u_email==u_email0)
+					if prueba2:
+
+						if u_tipo == 'M' and u_codigoMedico == '':
+							msj_info = "Para el tipo de usuario 'Medico' el campo 'Codigo del medico' es requerido."
+						
+						else :
+							u = None
+							if u_tipo != 'M' : 
+								u = Usuario(
+									username=u_cedula,
+									first_name=u_nombres,
+									last_name=u_apellidos,
+									tipo=u_tipo,
+									email=u_email,
+									password=u_clave
+								)
+							elif u_tipo == 'M' and u_codigoMedico:
+								u = Medico(
+									username=u_cedula,
+									first_name=u_nombres,
+									last_name=u_apellidos,
+									tipo=u_tipo,
+									codigo=u_codigoMedico,
+									email=u_email,
+									password=u_clave
+								)
+							u.is_active = False
+							u.set_password(u_clave)
+							if u_administrador == True:
+								u.is_staff = True
+							u.save()
+							return redirect('/')
+
+					else:
+						msj_info = "No hubo coincidencia con los emails ingresados."     
 				else:
-						msj_info = "No hubo coincidencia con las claves ingresadas"     
+					msj_info = "No hubo coincidencia con las claves ingresadas."     
 			else:
-					msj_info = "Ya hay un usuario registrado con esa cedula"     
+				msj_info = "Ya hay un usuario registrado con esa cedula." 
 		else:
-			msj_info = "Error con el formulario"
-		msj_tipo = "error"
-		info = {'msj_tipo':msj_tipo,'msj_info':msj_info,'form':form}
-		return render_to_response('solicitar.html',info,context_instance=RequestContext(request))
-	form = SolicitarCuenta()
-	info = {'form':form}
-	return render_to_response('solicitar.html',info,context_instance=RequestContext(request))
+			msj_info = "Error con el formulario."
+
+		msj_tipo = "danger"
+		info = {'msj_tipo':msj_tipo,'msj_info':msj_info,'form':form, 'formSolicitar':formSolicitar}
+		return render_to_response('solicitar_cuenta.html',info,context_instance=RequestContext(request))
+
+	formSolicitar = SolicitarCuenta()
+	info = {'form':form, 'formSolicitar':formSolicitar}
+	return render_to_response('solicitar_cuenta.html',info,context_instance=RequestContext(request))
 
 @login_required(login_url='/')
 def usario_listarPendientes(request):    

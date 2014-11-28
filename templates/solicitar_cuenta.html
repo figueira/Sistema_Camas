@@ -1,0 +1,216 @@
+{% extends "base.html" %}
+
+{% block scripts %}
+
+	<script>
+		$(document).ready( function() {
+
+			$( "#form-type-user").change(function() {
+				if($(this).val() == 'M'){
+					$("#codigoMedicoForm").fadeIn();
+				}
+				else {
+					$("#codigoMedicoForm").fadeOut();
+				}
+			});
+
+			if($( "#form-type-user").val() == 'M') {
+				$("#codigoMedicoForm").fadeIn();
+			}
+		});
+
+	</script>
+
+{% endblock %} 
+
+{% block body %}
+
+	{% if mensaje %}
+		{{ mensaje }}
+	{% endif %}
+
+	<form method="post" action="/usuario/solicitar">
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container">
+					<h4 class="text-center">
+						Solicitar Cuenta					
+					</h4>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row">
+		
+			{% csrf_token %}
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+					
+					<br>
+
+					<span class="msj-error">
+						{{formSolicitar.cedula.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-credit-card"></span>
+						</span>
+						{{formSolicitar.cedula}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{formSolicitar.nombres.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-user"></span>
+						</span>
+						{{formSolicitar.nombres}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{formSolicitar.email.errors}} 
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{formSolicitar.email}}
+					</div>
+
+					<br>
+					
+					<span class="msj-error">
+						{{formSolicitar.clave.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-certificate"></span>
+						</span>
+						{{formSolicitar.clave}}
+					</div>
+
+					<br>
+
+				</div>
+			</div>
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+					
+					<br>
+
+					<span class="msj-error">
+						{{formSolicitar.tipo.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-tower"></span>
+						</span>
+						{{formSolicitar.tipo}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{formSolicitar.apellidos.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-user"></span>
+						</span>
+						{{formSolicitar.apellidos}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{formSolicitar.email0.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-envelope"></span>
+						</span>
+						{{formSolicitar.email0}}
+					</div>
+
+					<br>
+
+					<span class="msj-error">
+						{{formSolicitar.clave0.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-certificate"></span>
+						</span>
+						{{formSolicitar.clave0}}
+					</div>
+
+					<br>
+
+				</div>
+			</div>
+		
+		</div>
+
+		<div id="codigoMedicoForm" class="row" style="display: none">
+
+			<div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+				<div class="grid-container">
+
+					<br>
+
+					<span class="msj-error">
+						{{formSolicitar.codigoMedico.errors}}
+					</span>
+					<div class="input-group">
+						<span class="input-group-addon">
+							<span class="glyphicon glyphicon-barcode"></span>
+						</span>
+						{{formSolicitar.codigoMedico}}
+					</div>
+
+					<br>
+
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row">
+
+			<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+				<div class="grid-container clearfix">
+
+					<div class="checkbox  pull-left">
+						<div>
+							<span class="msj-error">
+								{{formSolicitar.administrador.errors}}
+							</span>
+						</div>
+						<div>
+							<label>
+								&nbsp; {{formSolicitar.administrador}} Agregar usuario como Administrador
+							</label>
+						</div>
+					</div>	
+
+					<div class="pull-right">
+						<input class="btn btn-default form-button" type="submit" value="Solicitar Cuenta" />
+					</div>
+				</div>
+			</div>
+
+		</div>
+
+	</form>			
+
+{% endblock %}
+
